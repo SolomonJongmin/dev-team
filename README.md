@@ -1,6 +1,6 @@
 # dev-team — Claude Code + Codex 멀티 에이전트 개발팀
 
-**PL(Claude Code 메인 세션)** 하나가 **Codex·Claude 직원들**에게 일을 나눠 맡기는 개발팀 구성입니다.
+**PL(Claude Code 메인 세션)** 하나가 **Codex 직원들**에게 일을 나눠 맡기는 개발팀 구성입니다.
 실제 제품 개발에서 굴려 보며 다듬은 규칙과 실행 스크립트를 일반화했습니다.
 
 ## 구성

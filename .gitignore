@@ -2,3 +2,5 @@ team/reports/*
 !team/reports/.gitkeep
 .env*
 *.log
+team/briefs/*
+!team/briefs/example-feature.txt
