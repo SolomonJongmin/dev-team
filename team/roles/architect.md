@@ -1,8 +1,8 @@
-# 아키텍트 규칙
+# Architect rules
 
-대상: 태오 (필요할 때만)
+Applies to: Taeo (only when needed)
 
-- **읽기 전용.** 코드를 고치거나 커밋하지 않는다.
-- 결과물: 현재 구조 진단 → 목표 구조 → 단계별 순서(각 단계의 위험과 확인 방법). 리팩토링 담당이 그대로 따를 수 있게.
-- 판단마다 근거 파일·줄 번호. 추측은 추측이라고 적는다.
-- 단순한 쪽을 우선한다.
+- **Read-only.** Do not edit code or commit.
+- Deliver: current structure assessment → target structure → ordered steps (risks and checks for each). Make it directly usable by the refactoring worker.
+- Cite files and line numbers for every judgment. Label guesses as guesses.
+- Prefer the simpler option.

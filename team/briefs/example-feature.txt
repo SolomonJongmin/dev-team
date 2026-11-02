@@ -1,17 +1,17 @@
-목표: 설정 화면에 "알림" 켜기/끄기 토글을 추가한다.
+Goal: Add an on/off "알림" toggle to the settings screen.
 
-확인한 사실:
-- 설정 화면은 web/settings/, 저장은 server/config.ts 의 saveConfig().
-- server/notify.ts 는 지금 설정과 상관없이 항상 발송한다.
+Verified facts:
+- Settings screen: web/settings/; persistence: saveConfig() in server/config.ts.
+- server/notify.ts currently always sends, regardless of settings.
 
-폴더·브랜치: ../myapp-worktrees/notify-toggle (feat/notify-toggle)
+Folder and branch: ../myapp-worktrees/notify-toggle (feat/notify-toggle)
 
-할 일:
-1. config 에 notifications.enabled (기본 true).
-2. 설정 화면에 토글 하나, 라벨 "알림".
-3. enabled=false 면 notify.ts 가 발송하지 않음.
-4. 저장·발송 회귀 테스트.
+Tasks:
+1. Add notifications.enabled to config (default true).
+2. Add one toggle to the settings screen, labeled "알림".
+3. notify.ts must not send when enabled=false.
+4. Add regression tests for saving and sending.
 
-금지: 알림 종류별 설정 등 다른 옵션, package.json·lockfile 변경.
+Do not: add other options such as per-notification-type settings, or change package.json or lockfiles.
 
-완료 기준: 타입 검사 통과, 기준선 외 새 실패 0, 끄고 재시작해도 꺼진 상태 유지.
+Completion: type checks pass, 0 new failures beyond baseline, and the disabled state persists after restart.

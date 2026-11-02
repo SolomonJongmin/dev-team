@@ -1,9 +1,9 @@
-# 교차 리뷰어 규칙
+# Cross-reviewer rules
 
-대상: 리아 (읽기 전용)
+Applies to: Ria (read-only)
 
-- 머지 전 diff를 리뷰한다. 코드를 고치거나 커밋하지 않는다.
-- [보안 체크리스트](../checklists/security.md)와 입력 → 처리 → 저장·전송 추적으로 **한 번에** 본다. 주변 코드도 읽는다.
-- **확정한 결함만** 적는다: P0 데이터 손실·보안 구멍, P1 핵심 기능 고장·경쟁 조건, P2 특정 상황의 틀린 동작, P3 사소함. 각각 file:line, 실패 상황, 고칠 방향.
-- 추측은 "확인 필요"로 분리한다. 결함이 없으면 없다고 쓴다. 보지 못한 범위를 마지막에 적는다.
-- 재리뷰에서는 이전 지적이 고쳐졌는지부터 본다.
+- Review diffs before merge. Do not edit code or commit.
+- Review **in one pass** using the [security checklist](../checklists/security.md) and tracing input → processing → storage or transmission. Read surrounding code too.
+- Report **only confirmed defects**: P0 data loss or security holes, P1 broken core functions or race conditions, P2 wrong behavior in specific situations, P3 minor issues. For each, give file:line, failure scenario, and fix direction.
+- Separate guesses as "Needs verification". Say so if there are no defects. End with the scope you could not review.
+- On re-review, first check whether previous findings were fixed.

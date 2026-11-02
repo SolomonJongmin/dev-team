@@ -1,27 +1,27 @@
-# 보안 체크리스트
+# Security checklist
 
-인증·권한·비밀값·설정 저장·프로세스 수명을 건드렸으면 제출 전에 확인하고, 항목별 예/아니오/해당 없음 표를 보고에 붙인다.
+If you touched authentication, permissions, secrets, settings persistence, or process lifecycles, check before submission and attach a Yes/No/N/A table for each item to the report.
 
-## 비밀값
-- [ ] 비밀값이 로그·오류 문구·UI·분석 이벤트·모델 출력으로 새지 않는가? (URL 쿼리, 제목·요약 필드 포함)
-- [ ] 자격 증명이 다른 권한으로 읽을 수 있는 곳(큐, 공용 테이블)에 평문으로 저장되지 않는가?
+## Secrets
+- [ ] Are secrets kept out of logs, error messages, UI, analytics events, and model output? (Including URL queries, title and summary fields)
+- [ ] Are credentials kept out of plaintext storage readable by other permission levels (queues, shared tables)?
 
-## 인증·권한
-- [ ] 요청자가 주장하는 값이 아니라 서버가 검증한 신원·출처로 판단하는가?
-- [ ] 승인·응답이 실제 요청한 사용자·세션에 묶여 있어 다른 연결이 위조할 수 없는가?
-- [ ] 새 경로 말고 기존 우회 경로(직접 핸들러, 관리자 API, 영구 허용)도 같은 검사를 거치는가?
-- [ ] 입력값(날짜·수치·ID)의 형식과 경계를 검증하는가?
+## Authentication and permissions
+- [ ] Are decisions based on server-verified identity and origin, rather than requester claims?
+- [ ] Are approvals and responses bound to the actual requesting user and session, so other connections cannot forge them?
+- [ ] Do existing bypass paths (direct handlers, admin APIs, permanent grants) receive the same checks as new paths?
+- [ ] Are input formats and boundaries (dates, numbers, IDs) validated?
 
-## 경쟁 조건
-- [ ] 확인한 뒤 실제로 사용하는 사이에 상태가 바뀌어도 안전한가? (await 뒤 재확인, 취소·만료 후 중단)
-- [ ] 늦게 도착한 응답이 최신 상태를 덮어쓰지 않는가?
-- [ ] 한도·쿼터는 동시에 들어온 요청까지 포함해 원자적으로 확보하는가?
+## Race conditions
+- [ ] Is it safe if state changes between checking and using it? (Recheck after await; stop after cancellation or expiry)
+- [ ] Are late responses prevented from overwriting current state?
+- [ ] Are limits and quotas reserved atomically, including concurrent requests?
 
-## 저장·재시작
-- [ ] 수정하지 않은 필드를 오래된 값으로 덮어쓰거나, 지운 값을 되살리지 않는가?
-- [ ] 저장 실패가 호출자에게 전달되는가?
-- [ ] 재연결·재시작·타임아웃 뒤에 이전 작업이 새 작업을 방해하지 않는가?
+## Persistence and restart
+- [ ] Are untouched fields protected from stale overwrites, and deleted values from being restored?
+- [ ] Are save failures passed to the caller?
+- [ ] After reconnects, restarts, or timeouts, is old work prevented from interfering with new work?
 
-## 테스트
-- [ ] 검증 함수를 모의 함수로 바꾸지 않고, 실제로 거부되는 경우를 테스트하는가?
-- [ ] 실패·취소·재시작 경로를 테스트했는가? 실행하지 못한 검증은 그렇다고 적었는가?
+## Tests
+- [ ] Do tests cover actual rejection without mocking the validation function?
+- [ ] Have failure, cancellation, and restart paths been tested? Are checks that could not run marked as such?

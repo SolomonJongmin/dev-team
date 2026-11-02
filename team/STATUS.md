@@ -1,4 +1,4 @@
-# 현황판 (run-codex.sh 가 자동 기록)
+# Status board (updated automatically by run-codex.sh)
 
-| 시각 | 직원 | 작업 | 상태 | 보고서 |
+| Time | Worker | Job | State | Report |
 |---|---|---|---|---|

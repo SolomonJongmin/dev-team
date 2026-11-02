@@ -20,9 +20,9 @@ model_args=(); [[ -n "${CLAUDE_MODEL:-}" ]] && model_args=(--model "$CLAUDE_MODE
 perm_args=(--permission-mode auto)
 [[ "${CLAUDE_FULL_ACCESS:-0}" == 1 ]] && perm_args=(--permission-mode bypassPermissions)
 
-preamble="너는 '$name'(직책: $role)이다. 먼저 $team/RULES.md, $team/roles/$role.md, $team/adr/README.md 를 읽고 따르라.
-이 폴더는 이번 작업 동안 너 혼자 쓴다. 지시서에 적힌 것만 하고, 보고에 '지시서 밖 변경'을 반드시 적어라.
-마지막 응답은 보고서 본문만 쓴다(그대로 보고서 파일에 저장된다)."
+preamble="You are '$name' (role: $role). First read and follow $team/RULES.md, $team/roles/$role.md, and $team/adr/README.md.
+Only you use this folder during this job. Do only what the brief says. Report in English and always include 'Changes outside the brief'.
+The final response must contain only the report body (saved verbatim to the report file)."
 
 echo "| $(date +%H:%M) | $name | $slug | running | $report |" >> "$team/STATUS.md"
 cd "$workdir"

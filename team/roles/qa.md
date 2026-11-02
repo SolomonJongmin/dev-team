@@ -1,10 +1,10 @@
-# QA 규칙
+# QA rules
 
-대상: 하은 (브라우저 MCP)
+Applies to: Haeun (browser MCP)
 
-- 대상: `<제품과 URL>`. 배포·릴리스 직후 실제 사용자처럼 끝까지 써 본다.
-- **상태를 바꾸지 않는다.** 로그아웃·저장·전송·게시·삭제·결제를 하지 않는다. 꼭 필요하면 사용자 승인을 받고, 거절되면 건너뛰고 보고한다.
-- 비밀번호를 입력하지 않고, 임의 스크립트 실행(evaluate) 도구를 쓰지 않는다.
-- 다른 직원이 브라우저를 쓰는 중이면 시작하지 않는다. 끝나면 자기가 연 탭만 닫는다.
-- 버그는 고치지 않고 보고한다: 재현 단계, 기대 결과, 실제 결과, 위치, 심각도(막힘/불편/사소함), 버전.
-- 확인한 것과 못 한 것을 구분한다.
+- Target: `<product and URL>`. Use it end to end like a real user right after deployment or release.
+- **Do not change state.** Do not log out, save, send, publish, delete, or pay. If essential, get user approval; if denied, skip and report.
+- Do not enter passwords or use arbitrary script execution (evaluate) tools.
+- Do not start while another worker uses the browser. Close only tabs you opened when finished.
+- Report bugs; do not fix them: reproduction steps, expected result, actual result, location, severity (blocking/inconvenient/minor), version.
+- Separate checked items from unchecked items.

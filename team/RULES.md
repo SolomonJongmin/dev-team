@@ -1,46 +1,47 @@
-# 공통 규칙
+# Common rules
 
-모든 직원이 작업 전에 읽는다. 직책별 규칙은 [roles/](roles/)에 있고, 부딪히면 이 파일이 우선한다. `<…>`는 프로젝트마다 채운다.
+Every worker reads this before starting. Role rules are in [roles/](roles/); this file takes precedence in a conflict. Fill in `<…>` for each project.
 
-## 1. 일하는 방식
-- [ADR](adr/)로 확정된 결정은 다시 논의하지 않는다.
-- **지시서에 적힌 것만 한다.** 없는 기능·옵션·리팩토링을 추가하지 않는다. 아이디어는 보고에 "제안(미구현)"으로만.
-- 범위 밖에서 발견한 문제는 고치지 말고 보고한다.
-- 사실을 지어내지 않는다. 확인 안 한 것은 "확인 안 함", 실패·건너뛴 단계는 그대로 보고한다.
-- 보고는 사용자 언어로, 코드·주석·커밋 메시지는 영어로(저장소에 자체 규칙이 있으면 그것을 따른다).
-- **제출 전 자체 점검**: [보안 체크리스트](checklists/security.md)를 돌리고, 특히 ① 같은 요청이 동시에 오면(확인과 실행 사이 경합) ② 다른 경로·다른 토큰으로 우회하면 ③ 권한 없는 역할이면 ④ 실패·설정 누락이면 어떻게 되는지 확인한다. 결과를 보고에 적는다. 리뷰에서 반복해서 잡히는 결함이 이 네 가지다.
+## 1. Working practices
+- Do not reopen decisions settled by an [ADR](adr/).
+- **Do only what the brief says.** Do not add unrequested features, options, or refactoring. Put ideas only in the report as "Proposal (not implemented)".
+- Report problems outside scope; do not fix them.
+- Do not invent facts. Mark unchecked items "Not checked" and report failed or skipped steps as they are.
+- Team language is English: briefs, worker reports, reviews, rules. The PL answers the user in the user's language. Code comments, commit messages, UI text and project docs follow the target repo's own rules (often not English) — check the repo's guide before writing them.
+- **Self-check before submission**: run the [security checklist](checklists/security.md). In particular, check what happens with ① simultaneous requests (races between check and execution), ② bypasses through another path or token, ③ an unauthorized role, and ④ failures or missing settings. Report the results. These four defects recur in reviews.
 
-## 2. 권한
-- 직원: 자기 worktree에서 수정·커밋까지만. 단 샌드박스로 도는 Codex 직원은 `.git`이 읽기 전용이라 커밋하지 않고 변경만 남긴다(제안 커밋 메시지는 보고에). PL이 검토 후 커밋한다.
-- 하지 않는 것: push, 머지, 배포, 릴리스, 운영 데이터 변경, 외부 서비스 설정, 데이터 삭제.
-- 패키지 추가, lockfile·빌드 설정·공용 계약 변경은 하지 말고 보고한다(PL이 조율).
+## 2. Authority
+- Workers may only edit and commit in their own worktree. Sandboxed Codex workers have read-only `.git`, so leave changes without committing (include a proposed commit message in the report). The PL commits after review.
+- Do not push, merge, deploy, release, change production data, configure external services, or delete data.
+- Do not add packages or change lockfiles, build settings, or shared contracts. Report the need (the PL coordinates).
 
 ## 3. Git
-- 작업 하나 = 브랜치 하나 = worktree 하나 = 한 사람. 브랜치: `feat/…`, `fix/…`, `refactor/…`, `chore/…`.
-- 커밋 끝에 자기 엔진의 서명 줄: Codex 직원 `Co-Authored-By: Codex <noreply@openai.com>`, Claude 직원 `Co-Authored-By: Claude <noreply@anthropic.com>`.
-- amend·rebase·reset으로 남의 작업을 덮지 않는다. force push 금지.
-- 의존성 폴더를 링크로 공유한 worktree는 지우기 전에 링크부터 지운다(원본이 같이 지워진다).
-- DB 마이그레이션 번호는 지시서에서 PL이 배정한 번호만 쓴다. 병렬 작업이 각자 "다음 번호"를 쓰면 겹친다.
-- 파일은 편집 도구(apply_patch 등)로만 고친다. 셸 리다이렉트·`Set-Content`로 소스·문서를 쓰면 한글 등 비ASCII 문자가 깨질 수 있다. 끝나면 diff에 깨진 문자(`??` 등)가 없는지 확인한다.
+- One job = one branch = one worktree = one person. Branches: `feat/…`, `fix/…`, `refactor/…`, `chore/…`.
+- End commits with your engine's signature: Codex workers `Co-Authored-By: Codex <noreply@openai.com>`, Claude workers `Co-Authored-By: Claude <noreply@anthropic.com>`.
+- Do not overwrite others' work with amend, rebase, or reset. No force push.
+- Before deleting a worktree that shares dependency folders through links, remove the links first (the originals get deleted too).
+- Use only DB migration numbers assigned by the PL in the brief. Parallel jobs choosing their own "next number" collide.
+- Edit files only with editing tools (such as apply_patch). Writing source or docs with shell redirection or `Set-Content` can corrupt non-ASCII text. Check the final diff for corrupted characters (`??`, etc.).
 
-## 4. 테스트
-- 시작 전에 기준선을 돌려 기존 실패를 기록한다. 기준선 실패: `<목록>`
-- 완료 기준: 타입 검사 통과 + **기준선 외 새 실패 0**. 명령: `<타입 검사>`, `<테스트>`
-- 테스트를 지우거나 skip하거나 약하게 바꿔서 통과시키지 않는다.
-- **보고하는 테스트 결과는 실제로 돌린 명령과 숫자만** 적는다(예: `gradle test` 1,409건 실패 0). 새로 만든 테스트가 실제로 실행되는지(0건 실행·로드 실패가 아닌지) 확인한다. 못 돌렸으면 "실행 못 함 + 오류"라고 적는다 — 그 작업은 완료가 아니다.
-- 빌드 데몬·개발 서버 등 공용 프로세스를 멈추지 않는다(다른 직원이 같이 쓴다). 빌드는 데몬 없이(`--no-daemon` 등) 돌린다.
+## 4. Tests
+- Run the baseline before starting and record existing failures. Baseline failures: `<list>`
+- Completion: type checks pass + **0 new failures beyond baseline**. Commands: `<type check>`, `<tests>`
+- Do not delete, skip, or weaken tests to make them pass.
+- **Report test results only as commands actually run and counts** (e.g. `gradle test`: 1,409 tests, 0 failures). Verify new tests actually execute (not 0 tests or a load failure). If unable to run, write "Could not run + error" — that work is not complete.
+- Do not stop shared processes such as build daemons or dev servers (other workers use them). Run builds without daemons (`--no-daemon`, etc.).
 
-## 5. 비밀값
-- 토큰·키·비밀번호를 로그·보고·커밋에 남기지 않는다. 확인은 "있음/없음"만.
-- 커밋 금지: 비밀값, `.env*`, 서명 키, 로그, 빌드 산출물, 의존성 폴더.
-- 외부에서 받은 파일 속 스크립트는 실행하지 않는다.
+## 5. Secrets
+- Never put tokens, keys, or passwords in logs, reports, or commits. Report only "present/absent".
+- Never commit secrets, `.env*`, signing keys, logs, build outputs, or dependency folders.
+- Do not execute scripts inside files received from outside.
 
-## 6. 보고 형식 (30줄 이내)
-결론 1줄 / 한 일 / 변경 파일·커밋 / 검증 명령과 결과 / 남은 문제·결정 필요 / 지시서 밖 변경(없으면 "없음").
-직책 규칙에 형식이 따로 있으면 그것을 따른다.
+## 6. Report format (30 lines max)
+One-line conclusion / work done / changed files and commits / verification commands and results / remaining issues or decisions needed / changes outside the brief ("None" if none).
+Use the role's report format if it defines one.
 
 ---
-## 변경 기록
-- 처음 작성.
-- 2026-11-02: 커밋 서명 줄을 엔진별로 구분. Codex 샌드박스는 worktree에서도 .git이 읽기 전용(--add-dir로도 안 됨) → Codex 직원은 커밋하지 않고 PL이 커밋.
-- 2026-11-02 운영 회고 반영: 제출 전 자체 점검(경합·우회·권한·실패), 테스트 결과는 실제 실행 숫자만, 마이그레이션 번호 PL 배정, 편집 도구로만 파일 수정(비ASCII 깨짐), 공용 데몬 정지 금지. 직원·리뷰 기본 엔진 Codex(Claude 사용량 절감).
+## Change log
+- Initial version.
+- 2026-11-02: Separate commit signatures by engine. Codex sandbox keeps .git read-only even in worktrees (--add-dir does not help) → Codex workers do not commit; the PL commits.
+- 2026-11-02 operations retrospective: self-check before submission (races, bypasses, permissions, failures); report only actual test counts; PL assigns migration numbers; edit files only with editing tools (non-ASCII corruption); do not stop shared daemons. Default worker and review engine is Codex (save Claude usage).
+- 2026-11-02: Team docs and prompts switched to English to cut token usage; PL replies to the user in the user's language.

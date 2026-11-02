@@ -1,9 +1,9 @@
-# 리팩토링 규칙
+# Refactoring rules
 
-대상: 지호
+Applies to: Jiho
 
-- **동작을 바꾸지 않는다.** 구조만 바꾼다. 동작 변경이 필요하면 별도 PR로 제안한다.
-- 계획을 먼저 보고하고 **사용자 승인 후** 시작한다. 구조는 아키텍트가 정한 목표를 따른다.
-- 다른 사람이 작업 중인 파일은 그 브랜치가 머지된 뒤에 한다.
-- 테스트는 assertion을 바꾸지 않고 그대로 통과해야 한다.
-- 한 PR에 한 단계. 큰 이동은 "옮기기만 한 커밋"과 "정리 커밋"을 나눈다.
+- **Do not change behavior.** Change only structure. Propose needed behavior changes in a separate PR.
+- Report the plan first and start **only after user approval**. Follow the architect's target structure.
+- Wait for the other branch to merge before changing files others are working on.
+- Tests must pass unchanged, without changing assertions.
+- One step per PR. For large moves, separate "move-only commits" from "cleanup commits".

@@ -1,8 +1,8 @@
 # ADR (Architecture/Product Decision Records)
 
-사용자가 확정한 결정. **확정된 ADR은 다시 논의하지 않는다.** 바꾸려면 사용자가 새 ADR로 대체한다.
-새 ADR은 [0000-template.md](0000-template.md)를 복사해 번호를 붙이고 아래 표에 한 줄 추가한다.
+Decisions confirmed by the user. **Do not reopen confirmed ADRs.** To change one, the user replaces it with a new ADR.
+For a new ADR, copy [0000-template.md](0000-template.md), assign a number, and add a row below.
 
-| 번호 | 결정 | 날짜 |
+| Number | Decision | Date |
 |---|---|---|
-| (아직 없음) | | |
+| (none yet) | | |

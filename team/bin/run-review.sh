@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
 # Read-only cross-review of a branch diff.
 #   run-review.sh <worktree> <base-ref> <slug> [extra instructions]
-# Env: REVIEWER (default 리아), REVIEW_ENGINE (claude | codex, default codex),
+# Env: REVIEWER (default Ria), REVIEW_ENGINE (claude | codex, default codex),
 #      CLAUDE_MODEL / CODEX_MODEL (default gpt-6.1-sol).
 # The diff goes in on stdin — do NOT add </dev/null here, or the diff is dropped.
 set -euo pipefail
 [[ $# -ge 3 ]] || { echo "usage: run-review.sh <worktree> <base-ref> <slug> [extra]" >&2; exit 2; }
 wt=$1; base=$2; slug=$3; extra=${4:-}
-who=${REVIEWER:-리아}
+who=${REVIEWER:-Ria}
 engine=${REVIEW_ENGINE:-codex}
 team=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 mkdir -p "$team/reports"
 report="$team/reports/$(date +%Y-%m-%d)-$who-review-$slug.md"
 
-prompt="너는 '$who'(직책: reviewer)이다. 먼저 $team/RULES.md, $team/roles/reviewer.md, $team/checklists/security.md 를 읽고 따르라.
-stdin 으로 받은 diff($base...HEAD)를 리뷰하라. 코드를 고치거나 커밋하지 마라.
+prompt="You are '$who' (role: reviewer). First read and follow $team/RULES.md, $team/roles/reviewer.md, and $team/checklists/security.md.
+Review the diff ($base...HEAD) received on stdin. Do not edit code or commit. Report in English.
 $extra"
 
 echo "| $(date +%H:%M) | $who | review-$slug | running | $report |" >> "$team/STATUS.md"

@@ -1,10 +1,10 @@
-# 개발자 규칙
+# Developer rules
 
-대상: 서진(프론트엔드), 도윤·준(백엔드). 담당 폴더는 [TEAM.md](../../TEAM.md).
+Applies to: Seojin (frontend), Doyun and Jun (backend). See [TEAM.md](../../TEAM.md) for folder ownership.
 
-- 담당 밖 파일은 고치지 않는다. 필요하면 이유와 바꿀 내용을 보고한다.
-- 순서: 이미 된 작업인지 확인(`git log`) → 기준선 테스트 → 작게 고치고 회귀 테스트 추가(버그는 실패하는 테스트 먼저) → 작은 단위로 커밋 → 테스트·타입 검사·빌드 재실행.
-- 주변 코드의 이름·주석·관용구를 따른다. 요청받지 않은 포맷 변경·의존성 추가를 하지 않는다.
-- 사용자에게 보이는 문구는 짧게, 오류 문구는 무엇을 하면 되는지 알려준다. 실패를 조용히 삼키지 않는다.
-- 인증·권한·비밀값·설정 저장을 건드렸으면 [보안 체크리스트](../checklists/security.md) 결과를 보고에 붙인다.
-- DB 마이그레이션은 작성만 한다. 실행은 PL.
+- Do not edit files outside your ownership. If needed, report why and what must change.
+- Order: check whether work is already done (`git log`) → baseline tests → small changes with regression tests (for bugs, a failing test first) → small commits → rerun tests, type checks, and build.
+- Follow nearby code's names, comments, and idioms. Do not make unrequested formatting changes or add dependencies.
+- Keep user-facing text short; error messages must tell users what to do. Do not silently swallow failures.
+- If you touched authentication, permissions, secrets, or settings persistence, attach [security checklist](../checklists/security.md) results to the report.
+- Only write DB migrations. The PL runs them.

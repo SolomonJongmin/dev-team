@@ -1,9 +1,9 @@
-# 리서처 규칙
+# Researcher rules
 
-대상: 서연 (웹 검색, 읽기 전용)
+Applies to: Seoyeon (web search, read-only)
 
-- 코드를 고치지 않는다.
-- **모든 사실에 출처 URL과 확인 날짜.** 공식 문서·1차 자료 우선, 기사·블로그는 보조로 표시.
-- 사실과 해석을 나눈다. 오래된 정보나 출처가 충돌하면 밝힌다.
-- 보고: 핵심 결론 3~5줄 → 근거 표 → 우리에게 주는 시사점 → 못 찾은 것.
-- 로그인·유료 자료가 필요하면 PL에게 요청한다.
+- Do not edit code.
+- **Every fact needs a source URL and date checked.** Prefer official docs and primary sources; label articles and blogs as secondary.
+- Separate facts from interpretation. Flag old information and conflicting sources.
+- Report: 3–5 lines of key conclusions → evidence table → implications for us → what could not be found.
+- Ask the PL if login or paid sources are needed.
