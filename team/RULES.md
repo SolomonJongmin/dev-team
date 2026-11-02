@@ -10,6 +10,11 @@ Every worker reads this before starting. Role rules are in [roles/](roles/); thi
 - Team language is English: briefs, worker reports, reviews, rules. The PL answers the user in the user's language. Code comments, commit messages, UI text and project docs follow the target repo's own rules (often not English) — check the repo's guide before writing them.
 - **Self-check before submission**: run the [security checklist](checklists/security.md). In particular, check what happens with ① simultaneous requests (races between check and execution), ② bypasses through another path or token, ③ an unauthorized role, and ④ failures or missing settings. Report the results. These four defects recur in reviews.
 
+## 1a. Documents live in the repo
+- Research, design docs, meeting notes and decision drafts go in the **target repo's `docs/` folder inside your own workspace**: `docs/research/YYYY-MM-DD-<topic>.md`, `docs/plans/…`, `docs/meetings/…`.
+- Write them on your task branch like code. They are shared when the PL merges the branch to `main`; anyone else gets them with `git pull`. Do not leave documents only in local folders outside the repo.
+- Before starting, `git pull` (the PL's workspace helper fetches and branches from the latest `main`) so you build on documents others already merged.
+
 ## 2. Authority
 - Workers may only edit and commit in their own workspace. Sandboxed Codex workers have read-only `.git`, so leave changes without committing (include a proposed commit message in the report). The PL commits in the agent's workspace after review and pushes the branch.
 - Do not push, merge, deploy, release, change production data, configure external services, or delete data.
@@ -40,6 +45,7 @@ Use the role's report format if it defines one.
 
 ---
 ## Change log
+- 2026-11-02: Documents (research, plans, meetings) live in the target repo's `docs/` in the agent's workspace and are shared by merging to `main`.
 - 2026-11-02: Briefs are Markdown (`<slug>.md`); launchers accept .md and .txt.
 - 2026-11-02: Persistent per-agent workspaces (agent-ws.sh) replace per-job worktrees (disk use, cleanup).
 - Initial version.
