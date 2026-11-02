@@ -1,0 +1,4 @@
+team/reports/*
+!team/reports/.gitkeep
+.env*
+*.log
