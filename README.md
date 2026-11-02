@@ -1,6 +1,6 @@
 # dev-team — Claude Code + Codex 멀티 에이전트 개발팀
 
-**PL(Claude Code 메인 세션)** 하나가 **Codex 직원들**에게 일을 나눠 맡기는 개발팀 구성입니다.
+**PL(Claude Code 메인 세션)** 하나가 **Codex·Claude 직원들**에게 일을 나눠 맡기는 개발팀 구성입니다.
 실제 제품 개발에서 굴려 보며 다듬은 규칙과 실행 스크립트를 일반화했습니다.
 
 ## 구성
@@ -12,7 +12,7 @@
 | [team/roles/](team/roles/) | 직책별 규칙 |
 | [team/checklists/security.md](team/checklists/security.md) | 제출 전 보안 체크리스트 |
 | [team/adr/](team/adr/) | 사용자 확정 결정 기록 |
-| [team/bin/](team/bin/) | `run-codex.sh`(직원 실행), `run-review.sh`(교차 리뷰), `wait-job.sh`(완료 대기) |
+| [team/bin/](team/bin/) | `run-codex.sh`·`run-claude.sh`(직원 실행), `run-review.sh`(교차 리뷰), `wait-job.sh`(완료 대기) |
 | [team/briefs/](team/briefs/) | 지시서 (예시 포함) |
 | `team/STATUS.md` | 현황판 (실행기가 자동 기록) |
 

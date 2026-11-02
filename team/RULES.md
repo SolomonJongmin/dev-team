@@ -16,7 +16,7 @@
 
 ## 3. Git
 - 작업 하나 = 브랜치 하나 = worktree 하나 = 한 사람. 브랜치: `feat/…`, `fix/…`, `refactor/…`, `chore/…`.
-- 커밋 끝에 `Co-Authored-By: Codex <noreply@openai.com>`.
+- 커밋 끝에 자기 엔진의 서명 줄: Codex 직원 `Co-Authored-By: Codex <noreply@openai.com>`, Claude 직원 `Co-Authored-By: Claude <noreply@anthropic.com>`.
 - amend·rebase·reset으로 남의 작업을 덮지 않는다. force push 금지.
 - 의존성 폴더를 링크로 공유한 worktree는 지우기 전에 링크부터 지운다(원본이 같이 지워진다).
 
@@ -37,3 +37,4 @@
 ---
 ## 변경 기록
 - 처음 작성.
+- 2026-11-02: Codex 기본 모델 gpt-6.1-terra. 준(백엔드)과 리아(리뷰)는 Claude Code로 실행. 커밋 서명 줄을 엔진별로 구분.

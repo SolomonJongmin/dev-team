@@ -2,7 +2,7 @@
 # Starts one Codex teammate job and records it on the status board.
 #   run-codex.sh <name> <role> <workdir> <brief-file> [--search]
 # Report: team/reports/<date>-<name>-<slug>.md   Status: team/STATUS.md
-# Env: CODEX_MODEL (pin a model), CODEX_FULL_ACCESS=1 (bypass sandbox; Windows workspace-write
+# Env: CODEX_MODEL (default gpt-6.1-terra), CODEX_FULL_ACCESS=1 (bypass sandbox; Windows workspace-write
 #      can block all writes — only with user approval, only in a dedicated worktree).
 set -euo pipefail
 [[ $# -ge 4 ]] || { echo "usage: run-codex.sh <name> <role> <workdir> <brief-file> [--search]" >&2; exit 2; }
@@ -16,7 +16,7 @@ slug=$(basename "$brief" .txt)
 mkdir -p "$team/reports"
 report="$team/reports/$(date +%Y-%m-%d)-$name-$slug.md"
 
-model_args=(); [[ -n "${CODEX_MODEL:-}" ]] && model_args=(-m "$CODEX_MODEL")
+model_args=(-m "${CODEX_MODEL:-gpt-6.1-terra}")
 sandbox_args=(-s workspace-write)
 [[ "${CODEX_FULL_ACCESS:-0}" == 1 ]] && sandbox_args=(--dangerously-bypass-approvals-and-sandbox)
 
