@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
 # Starts one Claude Code teammate job and records it on the status board (same contract as run-codex.sh).
-#   run-claude.sh <name> <role> <workdir> <brief-file>
+#   run-claude.sh <name> <role> <workdir> team/briefs/<slug>.md (.txt also supported)
 # Report: team/reports/<date>-<name>-<slug>.md   Status: team/STATUS.md
 # Env: CLAUDE_MODEL (pin a model; default: Claude Code's default),
 #      CLAUDE_FULL_ACCESS=1 (bypassPermissions instead of auto — only with user approval,
-#      only in a dedicated worktree).
+#      only in the agent's workspace).
 set -euo pipefail
-[[ $# -ge 4 ]] || { echo "usage: run-claude.sh <name> <role> <workdir> <brief-file>" >&2; exit 2; }
+[[ $# -ge 4 ]] || { echo "usage: run-claude.sh <name> <role> <workdir> team/briefs/<slug>.md (.txt also supported)" >&2; exit 2; }
 name=$1; role=$2; workdir=$3; brief=$4
 
 team=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 [[ -f "$team/roles/$role.md" ]] || { echo "unknown role: $role (see $team/roles/)" >&2; exit 2; }
 brief=$(realpath "$brief"); [[ -s "$brief" ]] || { echo "brief file missing or empty: $brief" >&2; exit 2; }
-slug=$(basename "$brief" .txt)
+slug=$(basename "$brief"); slug=${slug%.*}
 mkdir -p "$team/reports"
 report="$team/reports/$(date +%Y-%m-%d)-$name-$slug.md"
 

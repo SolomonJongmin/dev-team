@@ -11,15 +11,14 @@ Every worker reads this before starting. Role rules are in [roles/](roles/); thi
 - **Self-check before submission**: run the [security checklist](checklists/security.md). In particular, check what happens with ① simultaneous requests (races between check and execution), ② bypasses through another path or token, ③ an unauthorized role, and ④ failures or missing settings. Report the results. These four defects recur in reviews.
 
 ## 2. Authority
-- Workers may only edit and commit in their own worktree. Sandboxed Codex workers have read-only `.git`, so leave changes without committing (include a proposed commit message in the report). The PL commits after review.
+- Workers may only edit and commit in their own workspace. Sandboxed Codex workers have read-only `.git`, so leave changes without committing (include a proposed commit message in the report). The PL commits in the agent's workspace after review and pushes the branch.
 - Do not push, merge, deploy, release, change production data, configure external services, or delete data.
 - Do not add packages or change lockfiles, build settings, or shared contracts. Report the need (the PL coordinates).
 
 ## 3. Git
-- One job = one branch = one worktree = one person. Branches: `feat/…`, `fix/…`, `refactor/…`, `chore/…`.
+- One job = one branch = one person; each agent works only in its own workspace. Branches: `feat/…`, `fix/…`, `refactor/…`, `chore/…`.
 - End commits with your engine's signature: Codex workers `Co-Authored-By: Codex <noreply@openai.com>`, Claude workers `Co-Authored-By: Claude <noreply@anthropic.com>`.
 - Do not overwrite others' work with amend, rebase, or reset. No force push.
-- Before deleting a worktree that shares dependency folders through links, remove the links first (the originals get deleted too).
 - Use only DB migration numbers assigned by the PL in the brief. Parallel jobs choosing their own "next number" collide.
 - Edit files only with editing tools (such as apply_patch). Writing source or docs with shell redirection or `Set-Content` can corrupt non-ASCII text. Check the final diff for corrupted characters (`??`, etc.).
 
@@ -41,6 +40,8 @@ Use the role's report format if it defines one.
 
 ---
 ## Change log
+- 2026-11-02: Briefs are Markdown (`<slug>.md`); launchers accept .md and .txt.
+- 2026-11-02: Persistent per-agent workspaces (agent-ws.sh) replace per-job worktrees (disk use, cleanup).
 - Initial version.
 - 2026-11-02: Separate commit signatures by engine. Codex sandbox keeps .git read-only even in worktrees (--add-dir does not help) → Codex workers do not commit; the PL commits.
 - 2026-11-02 operations retrospective: self-check before submission (races, bypasses, permissions, failures); report only actual test counts; PL assigns migration numbers; edit files only with editing tools (non-ASCII corruption); do not stop shared daemons. Default worker and review engine is Codex (save Claude usage).

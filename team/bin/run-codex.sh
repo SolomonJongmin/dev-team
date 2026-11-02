@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
 # Starts one Codex teammate job and records it on the status board.
-#   run-codex.sh <name> <role> <workdir> <brief-file> [--search]
+#   run-codex.sh <name> <role> <workdir> team/briefs/<slug>.md [--search] (.txt also supported)
 # Report: team/reports/<date>-<name>-<slug>.md   Status: team/STATUS.md
 # Env: CODEX_MODEL (default gpt-6.1-sol), CODEX_FULL_ACCESS=1 (bypass sandbox; Windows workspace-write
-#      can block all writes — only with user approval, only in a dedicated worktree), CODEX_ADD_DIRS.
+#      can block all writes — only with user approval, only in the agent's workspace), CODEX_ADD_DIRS.
 set -euo pipefail
-[[ $# -ge 4 ]] || { echo "usage: run-codex.sh <name> <role> <workdir> <brief-file> [--search]" >&2; exit 2; }
+[[ $# -ge 4 ]] || { echo "usage: run-codex.sh <name> <role> <workdir> team/briefs/<slug>.md [--search] (.txt also supported)" >&2; exit 2; }
 name=$1; role=$2; workdir=$3; brief=$4; shift 4
 search=""; [[ "${1:-}" == "--search" ]] && search="--search"
 
 team=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 [[ -f "$team/roles/$role.md" ]] || { echo "unknown role: $role (see $team/roles/)" >&2; exit 2; }
 brief=$(realpath "$brief"); [[ -s "$brief" ]] || { echo "brief file missing or empty: $brief" >&2; exit 2; }
-slug=$(basename "$brief" .txt)
+slug=$(basename "$brief"); slug=${slug%.*}
 mkdir -p "$team/reports"
 report="$team/reports/$(date +%Y-%m-%d)-$name-$slug.md"
 
@@ -29,7 +29,7 @@ Before submission, do the RULES.md section 1 self-check (races, bypasses, permis
 echo "| $(date +%H:%M) | $name | $slug | running | $report |" >> "$team/STATUS.md"
 cd "$workdir"
 # The workspace-write sandbox keeps .git read-only (also with --add-dir), so a sandboxed worker cannot commit.
-# It leaves the changes in the worktree and the PL commits them after review.
+# It leaves the changes in the workspace and the PL commits them after review.
 [[ "${CODEX_FULL_ACCESS:-0}" != 1 ]] && preamble="$preamble
 Do not commit (.git is read-only in the sandbox). Leave changes in the working folder and include one proposed commit message in the report. The PL commits after review."
 # </dev/null: codex exec otherwise waits for stdin forever when it is not a terminal.

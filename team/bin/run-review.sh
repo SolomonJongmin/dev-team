@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # Read-only cross-review of a branch diff.
-#   run-review.sh <worktree> <base-ref> <slug> [extra instructions]
+#   run-review.sh <workspace> <base-ref> <slug> [extra instructions]
 # Env: REVIEWER (default Ria), REVIEW_ENGINE (claude | codex, default codex),
 #      CLAUDE_MODEL / CODEX_MODEL (default gpt-6.1-sol).
 # The diff goes in on stdin — do NOT add </dev/null here, or the diff is dropped.
 set -euo pipefail
-[[ $# -ge 3 ]] || { echo "usage: run-review.sh <worktree> <base-ref> <slug> [extra]" >&2; exit 2; }
+[[ $# -ge 3 ]] || { echo "usage: run-review.sh <workspace> <base-ref> <slug> [extra]" >&2; exit 2; }
 wt=$1; base=$2; slug=$3; extra=${4:-}
 who=${REVIEWER:-Ria}
 engine=${REVIEW_ENGINE:-codex}

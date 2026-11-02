@@ -48,21 +48,20 @@ The PL replies in the user's language; team files are English.
 Run launchers from this team's root folder. Replace angle-bracket placeholders
 with real values; quote paths containing spaces. `<repo>` is the target repository.
 
-1. Write `team/briefs/<slug>.txt` with the editing tool; start from
-   [example-feature.txt](team/briefs/example-feature.txt). Include the goal, known
+1. Write `team/briefs/<slug>.md` with the editing tool; start from
+   [example-feature.md](team/briefs/example-feature.md). Include the goal, known
    facts, folder/branch, PL-assigned migration number (if any), forbidden changes,
    and done criteria with exact type-check/test commands and baseline counts.
-2. The PL updates remote refs and creates a dedicated worktree:
+2. The PL prepares the agent's persistent workspace on a fresh branch:
 
    ```bash
-   git -C <repo> fetch origin
-   git -C <repo> worktree add <repo>-worktrees/<slug> -b feat/<slug>
+   team/bin/agent-ws.sh doyun <repo> feat/<slug>
    ```
 
-   For read-only investigation, use this instead of the second command:
+   For read-only investigation:
 
    ```bash
-   git -C <repo> worktree add --detach <repo>-worktrees/<slug> origin/main
+   team/bin/agent-ws.sh doyun <repo> --detach
    ```
 
 3. Ask the PL to launch the worker as a background task with a completion
@@ -70,14 +69,14 @@ with real values; quote paths containing spaces. `<repo>` is the target reposito
    Use an English name and a role filename without `.md` (for example, `developer`):
 
    ```bash
-   team/bin/run-codex.sh <name> <role> <worktree> team/briefs/<slug>.txt [--search]
+   team/bin/run-codex.sh <name> <role> <workspace> team/briefs/<slug>.md [--search]
    ```
 
-   `<worktree>` is the path created above. Omit `[--search]`, or replace it with
+   `<workspace>` is the last line printed above. Omit `[--search]`, or replace it with
    `--search` to enable web search. For example:
 
    ```bash
-   team/bin/run-codex.sh Doyun developer ../myapp-worktrees/notify-toggle team/briefs/notify-toggle.txt
+   team/bin/run-codex.sh Doyun developer agents/doyun/myapp team/briefs/notify-toggle.md
    ```
 
 4. Before launching dependent jobs, wait for earlier jobs, then inspect their
@@ -92,8 +91,8 @@ with real values; quote paths containing spaces. `<repo>` is the target reposito
    brief's tests yourself. For example:
 
    ```bash
-   git -C <worktree> diff
-   git -C <worktree> diff --check
+   git -C <workspace> diff
+   git -C <workspace> diff --check
    ```
 
    The PL must see actual executed test counts and baseline comparisons.
@@ -103,7 +102,7 @@ with real values; quote paths containing spaces. `<repo>` is the target reposito
    `run-review.sh` reads `<base>...HEAD`; it cannot see uncommitted edits.
 
    ```bash
-   team/bin/run-review.sh <worktree> <base> <slug> ["focus"]
+   team/bin/run-review.sh <workspace> <base> <slug> ["focus"]
    ```
 
    Use a base ref such as `origin/main`; omit `["focus"]` or replace it with a
@@ -111,9 +110,27 @@ with real values; quote paths containing spaces. `<repo>` is the target reposito
    Send P0–P2 findings back to the worker with that path and "Read the whole
    report first." The PL commits the fixes, then re-reviews, checking previous
    findings first. For review dependencies, wait on `review-<slug>`.
-7. Codex workers do not commit in the sandbox. The PL owns commits, merges the
+7. Codex's sandbox keeps `.git` read-only. The PL commits in the agent's workspace,
+   pushes the branch, merges the
    reviewed branch onto the latest main, runs the full test suite on that result,
    and pushes only after verification. Follow `team/RULES.md` for commit signatures.
+
+### Workspaces
+
+Layout: `$AGENT_WS_ROOT/<agent>/<repo-name>/`, a normal clone per agent and repo.
+`AGENT_WS_ROOT` defaults to `<parent of the team folder>/agents`, beside `team`.
+Use lowercase names: hangyeol, seojin, doyun, jun, jiho, taeo, haeun, ria, seoyeon.
+Hangyeol also has a workspace for merge candidates and test runs.
+Dependencies and build caches stay in place between jobs. Never run concurrent
+jobs in the same workspace. The helper accepts a local clone or remote URL,
+fetches origin, and starts a new branch from `origin/main` (optional fourth argument
+changes the base). Existing local branch names and dirty workspaces are refused.
+
+When dirty, the PL must commit/push the previous job or deliberately discard it.
+To discard, inspect `git -C <workspace> diff` and `git -C <workspace> clean -nd`,
+then run `git -C <workspace> reset --hard HEAD` and `git -C <workspace> clean -fd`.
+Ignored dependencies/caches remain. For disk cleanup, delete an agent folder
+only after preserving needed work; its clones will be recreated on the next job.
 
 ### Roles and engines
 
@@ -132,7 +149,7 @@ Ownership is defined in `TEAM.md`; the names below are the default team.
 | Seoyeon | `researcher` | Research with sources and dates |
 
 All workers and reviews use Codex by default. Only with user approval, launch a
-Claude worker with `team/bin/run-claude.sh <name> <role> <worktree> <brief-file>`.
+Claude worker with `team/bin/run-claude.sh <name> <role> <workspace> <brief-file>`.
 Changing the review engine to Claude also requires user approval.
 
 ### Environment variables
@@ -141,11 +158,11 @@ Set these in the launching shell, or prefix a launcher with `NAME=value`.
 
 - `CODEX_MODEL`: default `gpt-6.1-sol`; model for Codex workers and reviews.
 - `CODEX_ADD_DIRS`: default empty; semicolon-separated extra writable directories, e.g. `CODEX_ADD_DIRS='/c/build-cache'`; worker sandbox only, never unlocks `.git`.
-- `CODEX_FULL_ACCESS`: default `0` (`workspace-write`); `1` bypasses sandbox/approvals for workers, only with user approval in a dedicated worktree.
+- `CODEX_FULL_ACCESS`: default `0` (`workspace-write`); `1` bypasses sandbox/approvals for workers, only with user approval in the agent's workspace.
 - `REVIEW_ENGINE`: default `codex`; accepts `codex` or `claude`.
 - `REVIEWER`: default `Ria`; reviewer name in status lines and report filenames.
 - `CLAUDE_MODEL`: default unset (Claude Code's default); model for Claude workers/reviews.
-- `CLAUDE_FULL_ACCESS`: default `0` (`auto`); `1` uses `bypassPermissions` for Claude workers, only with user approval in a dedicated worktree; reviews stay read-only.
+- `CLAUDE_FULL_ACCESS`: default `0` (`auto`); `1` uses `bypassPermissions` for Claude workers, only with user approval in the agent's workspace; reviews stay read-only.
 
 ### Status board and reports
 
@@ -153,7 +170,8 @@ Launchers append `| time | name | slug | running/done/failed | report path |`
 lines to `team/STATUS.md`. Never delete its history; use the last line for each
 slug. `done` means the report is nonempty, not that tests passed; `failed` means
 the report is empty. Read reports before continuing.
-Reports are git-ignored. Briefs are git-ignored except `example-feature.txt`.
+Reports are git-ignored. Briefs are git-ignored except `example-feature.md`.
+Launchers also accept legacy `.txt` briefs.
 
 ### Known pitfalls
 

@@ -5,14 +5,14 @@ Send review fixes back to workers too (PL edits greatly increase Claude usage an
 At startup, read [TEAM.md](TEAM.md), [team/RULES.md](team/RULES.md), [team/adr/README.md](team/adr/README.md), and the end of `team/STATUS.md`.
 
 ## Assigning work
-1. Write a brief in `team/briefs/<slug>.txt` ([example](team/briefs/example-feature.txt)): goal, verified facts, folder and branch, prohibitions, completion criteria.
+1. Write a brief in `team/briefs/<slug>.md` ([example](team/briefs/example-feature.md)): goal, verified facts, folder and branch, prohibitions, completion criteria.
    - Include test commands (with project-specific workarounds) and baseline counts.
    - For DB migrations, **the PL assigns the numbers** in the brief to avoid collisions between parallel jobs.
    - When returning review findings, include the review report path and say "Read the whole report first."
-2. Create a dedicated worktree: `git -C <repo> worktree add <wt> -b feat/<slug>`. For research only, create a `--detach` worktree from the latest remote revision (do not touch another person's working folder).
+2. Prepare the agent's workspace: `team/bin/agent-ws.sh <agent> <repo> feat/<slug>` (lowercase agent name). For read-only research, use `--detach` as the branch. Use the printed path as `<wt>` below. Codex's sandbox keeps `.git` read-only; the PL commits in the agent's workspace and pushes the branch.
 3. Run in the background **with completion notifications** (without them, completion gets missed). Follow [TEAM.md](TEAM.md) for engines.
-   - Codex worker: `team/bin/run-codex.sh <name> <role> <wt> team/briefs/<slug>.txt [--search]` (default gpt-6.1-sol, override with `CODEX_MODEL`; use `CODEX_ADD_DIRS` for writes outside the working folder, such as a Gradle cache)
-   - Claude worker (only when needed): `team/bin/run-claude.sh <name> <role> <wt> team/briefs/<slug>.txt`
+   - Codex worker: `team/bin/run-codex.sh <name> <role> <wt> team/briefs/<slug>.md [--search]` (default gpt-6.1-sol, override with `CODEX_MODEL`; use `CODEX_ADD_DIRS` for writes outside the working folder, such as a Gradle cache)
+   - Claude worker (only when needed): `team/bin/run-claude.sh <name> <role> <wt> team/briefs/<slug>.md`
 4. For dependent jobs, wait for earlier jobs with `team/bin/wait-job.sh <slug>...`.
 5. Never assign two workers to the same folder or file at once. Only one worker may use the browser at a time.
 6. Never delete or revert `team/STATUS.md` (work history). For trial runs, delete only the reports.
