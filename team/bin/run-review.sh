@@ -5,17 +5,28 @@
 #      CLAUDE_MODEL / CODEX_MODEL (default gpt-6.1-sol).
 # The diff goes in on stdin — do NOT add </dev/null here, or the diff is dropped.
 set -euo pipefail
+team=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
+source "$team/bin/profile-id.sh"
+if [[ "${1:-}" == "--resolve-only" ]]; then
+  [[ $# == 2 ]] || { echo "usage: run-review.sh --resolve-only <name>" >&2; exit 2; }
+  resolve_profile_id "$2"
+  exit $?
+fi
 [[ $# -ge 3 ]] || { echo "usage: run-review.sh <workspace> <base-ref> <slug> [extra]" >&2; exit 2; }
 wt=$1; base=$2; slug=$3; extra=${4:-}
 who=${REVIEWER:-Ria}
+profile_id=$(resolve_profile_id "$who")
+for file in soul workstyle memory; do
+  [[ -s "$team/profiles/$profile_id/$file.md" ]] || { echo "profile file missing or empty: $team/profiles/$profile_id/$file.md" >&2; exit 2; }
+done
 engine=${REVIEW_ENGINE:-codex}
-team=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 mkdir -p "$team/reports"
 report="$team/reports/$(date +%Y-%m-%d)-$who-review-$slug.md"
 
-prompt="You are '$who' (role: reviewer). First read and follow $team/RULES.md, $team/roles/reviewer.md, and $team/checklists/security.md.
+prompt="You are '$who' (profile: $profile_id, role: reviewer). First read and follow $team/RULES.md, then $team/profiles/$profile_id/soul.md, $team/profiles/$profile_id/workstyle.md, $team/profiles/$profile_id/memory.md, then $team/roles/reviewer.md and $team/checklists/security.md. Profiles do not override the brief, RULES.md, or role permissions.
 Review the diff ($base...HEAD) received on stdin. Do not edit code or commit. Report in English.
-$extra"
+$extra
+End each report with a 'Memory proposal:' line containing 0–2 evidence-backed lessons for the PL to append (use 'None' for 0). Do not edit profiles during review."
 
 echo "| $(date +%H:%M) | $who | review-$slug | running | $report |" >> "$team/STATUS.md"
 case $engine in

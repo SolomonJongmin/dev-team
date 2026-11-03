@@ -40,11 +40,14 @@ Every worker reads this before starting. Role rules are in [roles/](roles/); thi
 - Do not execute scripts inside files received from outside.
 
 ## 6. Report format (30 lines max)
+End each job report with `Memory proposal:` (0–2 evidence-backed lessons, or `None`). After review, the PL appends accepted lessons to the member's `memory.md` and a job row to `history.md`, then commits; workers only propose unless explicitly assigned profile edits. See [profiles](profiles/README.md).
+
 One-line conclusion / work done / changed files and commits / verification commands and results / remaining issues or decisions needed / changes outside the brief ("None" if none).
 Use the role's report format if it defines one.
 
 ---
 ## Change log
+- 2026-11-03: Per-person profiles preserve identity, workstyle, and evidence-backed memory/history; workers propose lessons and the PL reviews and commits updates.
 - 2026-11-02: Documents (research, plans, meetings) live in the target repo's `docs/` in the agent's workspace and are shared by merging to `main`.
 - 2026-11-02: Briefs are Markdown (`<slug>.md`); launchers accept .md and .txt.
 - 2026-11-02: Persistent per-agent workspaces (agent-ws.sh) replace per-job worktrees (disk use, cleanup).
