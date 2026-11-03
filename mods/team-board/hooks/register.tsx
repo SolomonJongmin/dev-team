@@ -4,6 +4,7 @@ import type { TeamBoardSnapshot } from '../types/index'
 import { snapshot, decisionCount, blockedJobs } from './parse'
 
 const normalize = (path: string) => path.replace(/\\/g, '/').replace(/\/+$/, '')
+const HALF = 999 // dock clamps to its 45% ceiling: about half the screen
 const SETUP = 'dev-team 경로를 설정하세요 (/plugin → team-board → teamDir)'
 const board = atom({ plugin: 'team-board', key: 'snapshot' } as const,
   snapshot(undefined, undefined, 0), { shape: 'board-3' })
@@ -58,7 +59,7 @@ export const register: Register = (on, options) => {
     await $.command.register({ name: 'team', description: '팀 현황 패널 열기' })
     await poll()
     timer = $.clock.every(5000, poll)
-    await $.ui.open({ id: 'team-board', title: '팀 현황' })
+    await $.ui.open({ id: 'team-board', title: '팀 현황', columns: HALF })
     return next(e)
   })
   on('session.end', (_, e, next) => {
@@ -67,7 +68,7 @@ export const register: Register = (on, options) => {
     return next(e)
   })
   on('command.run', { command: 'team' }, async $ => {
-    await $.ui.open({ id: 'team-board', title: '팀 현황' })
+    await $.ui.open({ id: 'team-board', title: '팀 현황', columns: HALF })
     return { text: '팀 현황 패널 열림' }
   })
   on('ui.render', { component: 'Pane', requestId: 'team-board' }, async ($, e) => {
