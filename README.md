@@ -43,6 +43,28 @@ Open Claude Code in this folder, or in the target repository with this folder
 referenced, and say **"work as this team"** ("이 팀 구성으로 일해줘").
 The PL replies in the user's language; team files are English.
 
+### Team board panel (optional mod)
+
+[`mods/team-board`](mods/team-board/README.md) is a Claude Code plugin that shows
+members, running/blocked jobs, pending decisions and recent results in a side
+panel (refreshed every 5 seconds; reopen with `/team`). Install it from this
+repository's marketplace:
+
+```text
+/plugin marketplace add SolomonJongmin/dev-team
+/plugin install team-board@dev-team
+```
+
+From a shell: `claude plugin marketplace add SolomonJongmin/dev-team` and then
+`claude plugin install team-board@dev-team`. To use your local clone instead
+(e.g. while editing the mod), pass its folder path to `marketplace add`.
+
+Then run `/plugin configure team-board@dev-team` and set **teamDir** to your
+dev-team clone (e.g. `C:/workspace/dev-team`). Left empty, it looks in the
+session folder and a `dev-team` folder below it. Restart Claude Code or run
+`/team` to open the panel. The panel reads your local `team/STATUS.md`,
+`team/DECISIONS.md` and `TEAM.md`, so it shows jobs launched from your clone only.
+
 ### One job, step by step
 
 Run launchers from this team's root folder. Replace angle-bracket placeholders
