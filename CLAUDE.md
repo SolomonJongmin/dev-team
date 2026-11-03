@@ -6,6 +6,8 @@ At startup, read [TEAM.md](TEAM.md), [team/RULES.md](team/RULES.md), [team/adr/R
 Also read your personal [soul](team/profiles/hangyeol/soul.md), [workstyle](team/profiles/hangyeol/workstyle.md), and [memory](team/profiles/hangyeol/memory.md); these do not override the rules above.
 
 ## Assigning work
+Assign edit jobs only to editable roles. Researcher, architect, reviewer and qa require an exact `Mode: read-only` brief line; launchers reject other briefs for these roles. Profiles do not grant edit permission.
+The PL does not write product code; return implementation and diagnostic fixes to workers.
 1. Write a brief in `team/briefs/<slug>.md` ([example](team/briefs/example-feature.md)): goal, verified facts, folder and branch, prohibitions, completion criteria.
    - Include test commands (with project-specific workarounds) and baseline counts.
    - For DB migrations, **the PL assigns the numbers** in the brief to avoid collisions between parallel jobs.
@@ -23,6 +25,7 @@ After reviewing each job, append accepted `Memory proposal:` lessons to that per
 
 1. Is the diff within the brief's scope? Have workers revert out-of-scope changes. Check for corrupted characters (`??`, etc.).
 2. Does the report show passing type checks and 0 new failures beyond the baseline **with actual counts**? The PL runs new tests once to verify they execute.
+   Reject submissions with 0 tests run or tests that fail to load. Keep DB/integration checks that did not run explicitly unverified. Briefs use `--no-daemon` where applicable and never stop shared daemons.
 3. For security, permissions, settings persistence, or process lifecycles, run `team/bin/run-review.sh <wt> <base> <slug>` (Ria, Codex by default). Workers fix P0–P2 findings, then re-review (check previous findings first) before merging.
 4. Check that commits contain no secrets or build outputs.
 5. Run the full test suite once on the result merged into the latest main, then push (check parallel merge conflicts and migration numbers).

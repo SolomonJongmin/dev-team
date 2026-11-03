@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+printf 'claude report\n'
+exit "${FAKE_EXIT:-0}"

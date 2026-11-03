@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -eu
+out=; prompt=
+while (( $# )); do
+  if [[ "$1" == -o ]]; then out=$2; shift 2; else prompt=$1; shift; fi
+done
+[[ "$TMP" == "$PWD/.job-tmp" && "$TEMP" == "$TMP" && "$TMPDIR" == "$TMP" ]]
+[[ "$prompt" == *'Preflight'* || "$prompt" == *'preflight'* ]]
+report=${out%.final.txt}
+case "${FAKE_MODE:-fallback}" in
+  full) printf 'full report\n' > "$report"; printf 'short final\n' > "$out" ;;
+  blocked) printf 'BLOCKED: unavailable host\n' > "$out" ;;
+  empty) : ;;
+  *) printf 'fallback report\n' > "$out" ;;
+esac
+exit "${FAKE_EXIT:-0}"
