@@ -21,6 +21,8 @@ export function memberLines(members: TeamBoardMember[], jobs: TeamBoardJob[], no
 }
 
 export function memberRows(members: TeamBoardMember[], jobs: TeamBoardJob[], now: number) {
+  const row = (prefix: string, badge: string, detail: string, color: 'green' | 'red' | 'cyan' | 'gray' | 'magenta', dimColor = false) =>
+    ({ text: prefix + badge + detail, prefix, badge, detail, color, dimColor })
   const matches = (m: TeamBoardMember, worker: string) => [m.english, m.name].some(n => n.toLowerCase() === worker.toLowerCase())
   const roster = [...members]
   for (const job of jobs) if (!roster.some(m => matches(m, job.worker))) {
@@ -28,18 +30,18 @@ export function memberRows(members: TeamBoardMember[], jobs: TeamBoardJob[], now
   }
   return roster.map((m, index) => {
     const label = index < members.length ? [m.name, m.role, m.ownership].filter(Boolean).join(' · ') : `${m.name} (명단 외)`
-    if (m.role === 'PL') return { text: `${m.name} · PL · 이 세션`, color: 'magenta' as const, dimColor: false }
+    if (m.role === 'PL') return row(`${m.name} · `, 'PL', ' · 이 세션', 'magenta')
     const history = jobs.filter(j => matches(m, j.worker))
     const running = history.filter(j => j.state === 'running')
-    if (running.length) return { text: `${label} · [작업 중] ${running.map(j => `${j.job} (${runningLine(j, now).split(' · ').slice(3).join(' · ')})`).join(', ')}`, color: 'green' as const, dimColor: false }
+    if (running.length) return row(`${label} · `, '[작업 중]', ` ${running.map(j => `${j.job} (${runningLine(j, now).split(' · ').slice(3).join(' · ')})`).join(', ')}`, 'green')
     const latest = history[history.length - 1]
     const unresolved = history.filter(j => (j.state === 'blocked' || j.state === 'failed') && !j.superseded)
-    if (unresolved.length) return { text: `${label} · [막힘] ${unresolved.map(j => j.job).join(', ')}`, color: 'red' as const, dimColor: false }
+    if (unresolved.length) return row(`${label} · `, '[막힘]', ` ${unresolved.map(j => j.job).join(', ')}`, 'red')
     const age = latest ? now - jobTime(latest.time) : NaN
-    if (latest?.state === 'done' && age >= 0 && age <= 30 * 60000) return { text: `${label} · [완료] ${latest.job}`, color: 'cyan' as const, dimColor: false }
-    if (latest?.state === 'cancelled') return { text: `${label} · [취소] ${latest.job}`, color: 'gray' as const, dimColor: false }
+    if (latest?.state === 'done' && age >= 0 && age <= 30 * 60000) return row(`${label} · `, '[완료]', ` ${latest.job}`, 'cyan')
+    if (latest?.state === 'cancelled') return row(`${label} · `, '[취소]', ` ${latest.job}`, 'gray')
     const time = latest?.time.match(/\d{2}:\d{2}/)?.[0]
-    return { text: `${label} · 대기${latest ? ` — 최근: ${latest.job} ${time}` : ''}`, color: 'gray' as const, dimColor: true }
+    return row(`${label} · `, '대기', latest ? ` — 최근: ${latest.job} ${time}` : '', 'gray', true)
   })
 }
 

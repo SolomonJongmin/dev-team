@@ -6,6 +6,8 @@ const PANE = {
     scroll: { offset: 0, bodyRows: 30 }, view: {} },
 } as const
 
+const exact = (text: string) => new RegExp(`^${text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`)
+
 test('open pane follows appended running and done rows without reopening', async ($, on) => {
   const clock = mock.clock(on, { now: Date.parse('2026-11-04T12:00:00+09:00') })
   let status = ''
@@ -18,23 +20,60 @@ test('open pane follows appended running and done rows without reopening', async
   await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
   const ui = await $.ui.mount(PANE)
   expect((await ui.find({ type: 'Text', text: /서진 · 개발/ }))?.text).toBe('서진 · 개발 · web/ · 대기')
-  expect((await ui.find({ type: 'Text', text: /서진 · 개발/ }))?.props.dimColor).toBe(true)
+  const badgeOnly = async (badge: string, color: string, detail: string, dimColor = false) => {
+    const badgeText = await ui.find({ type: 'Text', text: exact(badge) })
+    expect(badgeText?.text).toBe(badge)
+    expect(badgeText?.props.color).toBe(color)
+    expect(badgeText?.props.dimColor).toBe(dimColor)
+    for (const text of ['서진 · 개발 · web/ · ', detail]) {
+      const plain = await ui.find({ type: 'Text', text: exact(text) })
+      expect(plain?.text).toBe(text)
+      expect(plain?.props.color).toBe(undefined)
+      expect(plain?.props.dimColor).toBe(undefined)
+    }
+    const line = await ui.find({ type: 'Text', text: /서진 · 개발/ })
+    expect(line?.props.color).toBe(undefined)
+    expect(line?.props.dimColor).toBe(undefined)
+  }
+  await badgeOnly('대기', 'gray', '', true)
   status += '| 2026-11-04 12:00:00 | 서진 | live-job | running | r |\n'
   await clock.advance(5000)
   expect((await ui.find({ type: 'Text', text: /\[작업 중\]/ }))?.text).toBe('서진 · 개발 · web/ · [작업 중] live-job (0분)')
-  expect((await ui.find({ type: 'Text', text: /\[작업 중\]/ }))?.props.color).toBe('green')
+  await badgeOnly('[작업 중]', 'green', ' live-job (0분)')
   status += '| 2026-11-04 12:00:05 | 서진 | live-job | done | r |\n'
   await clock.advance(5000)
   expect((await ui.find({ type: 'Text', text: /\[완료\]/ }))?.text).toBe('서진 · 개발 · web/ · [완료] live-job')
-  expect((await ui.find({ type: 'Text', text: /\[완료\]/ }))?.props.color).toBe('cyan')
+  await badgeOnly('[완료]', 'cyan', ' live-job')
   expect(await ui.find({ type: 'Text', text: /\[작업 중\]/ })).toBe(undefined)
   status += '| 2026-11-04 12:00:10 | 서진 | live-job | failed | r |\n'
   await clock.advance(5000)
-  expect((await ui.find({ type: 'Text', text: /\[막힘\]/ }))?.props.color).toBe('red')
+  await badgeOnly('[막힘]', 'red', ' live-job')
   status += '| 2026-11-04 12:00:15 | 서진 | live-job | cancelled | r |\n'
   await clock.advance(5000)
-  expect((await ui.find({ type: 'Text', text: /\[취소\]/ }))?.props.color).toBe('gray')
+  await badgeOnly('[취소]', 'gray', ' live-job')
+  status += '| 2026-11-04 12:00:20 | 서진 | live-job | done | r |\n'
+  await clock.advance(31 * 60000)
+  await badgeOnly('대기', 'gray', ' — 최근: live-job 12:00', true)
   expect(opens).toBe(1)
+  await ui.unmount()
+})
+
+test('PL badge alone is magenta', async ($, on) => {
+  mock.clock(on)
+  on('fs.read', (_, e) => ({ value: e.path.endsWith('TEAM.md') ? '| Lead (리드) | PL | team/ | Codex |' : '' }))
+  on('command.register', () => ({ value: { command: 'team' } }))
+  on('ui.open', () => ({ value: { isPlaced: true } }))
+  on('ui.status', () => ({ value: undefined }))
+  on('session.start', (_, e) => ({ cwd: e.cwd }))
+  await $.session.start({ cwd: '/', surface: 'desktop', isInteractive: true })
+  const ui = await $.ui.mount(PANE)
+  expect((await ui.find({ type: 'Text', text: exact('PL') }))?.props.color).toBe('magenta')
+  for (const text of ['리드 · PL · 이 세션', '리드 · ', ' · 이 세션']) {
+    const plain = await ui.find({ type: 'Text', text: exact(text) })
+    expect(plain?.text).toBe(text)
+    expect(plain?.props.color).toBe(undefined)
+    expect(plain?.props.dimColor).toBe(undefined)
+  }
   await ui.unmount()
 })
 
