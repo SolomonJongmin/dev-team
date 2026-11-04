@@ -17,6 +17,10 @@ export function parseTeam(text: string | undefined): TeamBoardMember[] {
 }
 
 export function memberLines(members: TeamBoardMember[], jobs: TeamBoardJob[], now: number): string[] {
+  return memberRows(members, jobs, now).map(row => row.text)
+}
+
+export function memberRows(members: TeamBoardMember[], jobs: TeamBoardJob[], now: number) {
   const matches = (m: TeamBoardMember, worker: string) => [m.english, m.name].some(n => n.toLowerCase() === worker.toLowerCase())
   const roster = [...members]
   for (const job of jobs) if (!roster.some(m => matches(m, job.worker))) {
@@ -24,26 +28,30 @@ export function memberLines(members: TeamBoardMember[], jobs: TeamBoardJob[], no
   }
   return roster.map((m, index) => {
     const label = index < members.length ? [m.name, m.role, m.ownership].filter(Boolean).join(' · ') : `${m.name} (명단 외)`
-    if (m.role === 'PL') return `${m.name} · PL · 이 세션`
+    if (m.role === 'PL') return { text: `${m.name} · PL · 이 세션`, color: 'magenta' as const, dimColor: false }
     const history = jobs.filter(j => matches(m, j.worker))
     const running = history.filter(j => j.state === 'running')
-    if (running.length) return `${label} · ${running.map(j => `▶ ${j.job} (${runningLine(j, now).split(' · ').slice(3).join(' · ')})`).join(', ')}`
+    if (running.length) return { text: `${label} · [작업 중] ${running.map(j => `${j.job} (${runningLine(j, now).split(' · ').slice(3).join(' · ')})`).join(', ')}`, color: 'green' as const, dimColor: false }
     const latest = history[history.length - 1]
-    if (latest?.state === 'blocked' && !latest.superseded) return `${label} · ⚠ ${latest.job} blocked`
+    const unresolved = history.filter(j => (j.state === 'blocked' || j.state === 'failed') && !j.superseded)
+    if (unresolved.length) return { text: `${label} · [막힘] ${unresolved.map(j => j.job).join(', ')}`, color: 'red' as const, dimColor: false }
+    const age = latest ? now - jobTime(latest.time) : NaN
+    if (latest?.state === 'done' && age >= 0 && age <= 30 * 60000) return { text: `${label} · [완료] ${latest.job}`, color: 'cyan' as const, dimColor: false }
+    if (latest?.state === 'cancelled') return { text: `${label} · [취소] ${latest.job}`, color: 'gray' as const, dimColor: false }
     const time = latest?.time.match(/\d{2}:\d{2}/)?.[0]
-    return `${label} · 대기${latest ? ` — 최근: ${latest.job} (${latest.state === 'done' ? '완료' : latest.state} ${time})` : ''}`
+    return { text: `${label} · 대기${latest ? ` — 최근: ${latest.job} ${time}` : ''}`, color: 'gray' as const, dimColor: true }
   })
 }
 
 export function parseStatus(text: string | undefined): TeamBoardJob[] {
   const jobs = new Map<string, TeamBoardJob>()
   for (const line of (text ?? '').split(/\r?\n/)) {
-    const cells = line.trim().split('|').slice(1, -1).map(s => s.trim())
+    const cells = line.replace(/\0/g, '').trim().split('|').slice(1, -1).map(s => s.trim())
     if (cells.length !== 5 || !TIME.test(cells[0]) || !cells[2]) continue
     const [time, worker, job, state, report] = cells
     if (state === 'done' || state === 'running') {
       for (const previous of jobs.values()) {
-        if (previous.state === 'blocked' && baseJob(previous.job) === baseJob(job)) previous.superseded = true
+        if ((previous.state === 'blocked' || previous.state === 'failed') && baseJob(previous.job) === baseJob(job)) previous.superseded = true
       }
     }
     // Reinsertion preserves the latest row's position, regardless of timestamps.
@@ -64,10 +72,15 @@ export function parseDecisions(text: string | undefined): TeamBoardDecision[] {
 
 export function runningLine(job: TeamBoardJob, now: number): string {
   // Legacy HH:MM has no date; do not invent its age or stale status.
-  const start = /^\d{4}-/.test(job.time) ? Date.parse(job.time.replace(' ', 'T') + '+09:00') : NaN
+  const start = jobTime(job.time)
   const age = now - start
   const elapsed = Number.isFinite(age) && age >= 0 ? `${Math.floor(age / 60000)}분` : '경과 알 수 없음'
   return `${job.worker} · ${job.job} · ${job.time} · ${elapsed}${age > 7200000 ? ' · 오래됨?' : ''}`
+}
+
+function jobTime(time: string): number {
+  // A legacy time has no date, so neither its age nor recency is known.
+  return /^\d{4}-/.test(time) ? Date.parse(time.replace(' ', 'T') + '+09:00') : NaN
 }
 
 export function snapshot(status: string | undefined, decisions: string | undefined, now: number, team?: string): TeamBoardSnapshot {
@@ -76,10 +89,10 @@ export function snapshot(status: string | undefined, decisions: string | undefin
     ...(status === undefined ? ['경고: STATUS.md 읽기 실패 — 파일과 읽기 권한 확인'] : []),
     ...(decisions === undefined ? ['경고: DECISIONS.md 읽기 실패 — 파일과 읽기 권한 확인'] : []),
     ...(team === undefined ? ['경고: TEAM.md 읽기 실패 — 파일과 읽기 권한 확인'] : []),
-  ], members: memberLines(parseTeam(team), jobs, now), running: jobs.filter(j => j.state === 'running').map(j => runningLine(j, now)) }
+  ], members: memberRows(parseTeam(team), jobs, now), running: jobs.filter(j => j.state === 'running').map(j => runningLine(j, now)) }
 }
 
-export const blockedJobs = (board: TeamBoardSnapshot) => board.jobs.filter(j => j.state === 'blocked' && !j.superseded)
+export const blockedJobs = (board: TeamBoardSnapshot) => board.jobs.filter(j => (j.state === 'blocked' || j.state === 'failed') && !j.superseded)
 
 export function decisionCount(board: TeamBoardSnapshot): number {
   return board.decisions.length + blockedJobs(board).length
