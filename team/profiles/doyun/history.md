@@ -13,3 +13,4 @@
 | 2026-11-02 | agent-workspaces | 실행 종료(done; 승인·통과 의미 아님) | 1 | [보고서](C:/Users/최종민/projects/dev-team/team/reports/2026-11-02-도윤-agent-workspaces.md); [STATUS 65, 67행](C:/Users/최종민/projects/dev-team/team/STATUS.md#L65) |
 | 2026-11-02 | briefs-markdown.md | 실행 종료(done; 승인·통과 의미 아님) | 1 | [보고서](C:/Users/최종민/projects/dev-team/team/reports/2026-11-02-도윤-briefs-markdown.md.md); [STATUS 68, 69행](C:/Users/최종민/projects/dev-team/team/STATUS.md#L68) |
 | 2026-11-05 | intellicore-auth-lifecycle | release/visit 머지(d8622f2), 150 tests 0 fail | 3 | [보고서](reports/2026-11-05-144316-도윤-intellicore-auth-lifecycle-fix2.noe6Hs.md) |
+| 2026-11-05 | ax-chatgpt-subscription-backend | main 머지(776b5354), 신규 53 pass, 기존 실패 동일 | 3 | [보고서](reports/2026-11-05-173014-도윤-ax-chatgpt-subscription-backend-fix2.NMlHL6.md) |
