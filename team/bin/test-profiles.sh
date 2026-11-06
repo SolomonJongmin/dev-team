@@ -16,7 +16,7 @@ check_exit() {
 }
 for script in team/bin/run-codex.sh team/bin/run-review.sh; do
   for pair in '도윤:doyun' 'doyun:doyun' 'Ria:ria' '리아:ria' 'DOYUN:doyun' \
-    'Hangyeol:hangyeol' '한결:hangyeol' 'Seojin:seojin' '서진:seojin' \
+    'Eunho:eunho' '은호:eunho' 'Seojin:seojin' '서진:seojin' \
     'Jun:jun' '준:jun' 'Jiho:jiho' '지호:jiho' 'Taeo:taeo' '태오:taeo' \
     'Haeun:haeun' '하은:haeun' 'Seoyeon:seoyeon' '서연:seoyeon' \
     'Harin:harin' 'harin:harin' '하린:harin' 'Minjae:minjae' 'minjae:minjae' '민재:minjae' \

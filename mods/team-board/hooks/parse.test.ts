@@ -1,7 +1,7 @@
 import { expect, test } from 'claude-code/testing'
 import { parseStatus, parseDecisions, snapshot, decisionCount, runningLine, parseTeam, memberLines, memberRows } from './parse'
 
-const team = '| Name | Role | Ownership | Engine |\n|---|---|---|---|\n| Hangyeol (한결) | PL ([x](x)) | Briefs | Claude |\n| Seojin (서진) | Frontend (`developer`) | `web/`, UI tests | Codex |\n| Ria (리아) | Cross-reviewer (`reviewer`) | Review diffs before merge | Codex |'
+const team = '| Name | Role | Ownership | Engine |\n|---|---|---|---|\n| Eunho (은호) | PL ([x](x)) | Briefs | Claude |\n| Seojin (서진) | Frontend (`developer`) | `web/`, UI tests | Codex |\n| Ria (리아) | Cross-reviewer (`reviewer`) | Review diffs before merge | Codex |'
 
 test('TEAM rows parse names, short roles and short ownership', () => {
   const members = parseTeam(team)
@@ -13,7 +13,7 @@ test('TEAM rows parse names, short roles and short ownership', () => {
 test('members match Korean and English case-insensitively, list every running job and append unknown workers', () => {
   const jobs = parseStatus('| 12:00 | rIA | a | running | r |\n| 12:01 | 리아 | b | running | r |\n| 12:02 | SEOJIN | c | done | r |\n| 12:03 | Guest | d | blocked | r |')
   expect(memberLines(parseTeam(team), jobs, 0)).toEqual([
-    '한결 · PL · 이 세션', '서진 · 개발 · web/ · 대기 — 최근: c 12:02',
+    '은호 · PL · 이 세션', '서진 · 개발 · web/ · 대기 — 최근: c 12:02',
     '리아 · 리뷰 · [작업 중] a (경과 알 수 없음), b (경과 알 수 없음)', 'Guest (명단 외) · [막힘] d',
   ])
   expect(memberLines(parseTeam(team), [], 0)[1]).toBe('서진 · 개발 · web/ · 대기')

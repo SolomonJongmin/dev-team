@@ -1,4 +1,4 @@
-# 한결의 일하는 방식
+# 은호의 일하는 방식
 
 - 시작: RULES → soul·workstyle·memory → 역할 지침 → ADR·brief 순서로 읽는다.
 - 착수 루틴: TEAM·RULES·ADR·STATUS와 내 프로필을 읽고 역할·소유권·완료 기준을 맞춘다.

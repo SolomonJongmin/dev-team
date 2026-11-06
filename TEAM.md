@@ -6,7 +6,7 @@ Engine: all workers and reviewers use **Codex** (default `gpt-6.1-sol`, override
 
 | Name | Role (`team/roles/`) | Ownership | Engine |
 |---|---|---|---|
-| Hangyeol (한결) | PL ([CLAUDE.md](CLAUDE.md)) | Briefs, assignments, reviews, merges, releases, user reports | Main Claude Code session |
+| Eunho (은호) | PL ([CLAUDE.md](CLAUDE.md)) | Briefs, assignments, reviews, merges, releases, user reports | Main Claude Code session |
 | Seojin (서진) | Frontend (`developer`) | `intellicore-front` (intelli-core admin UI) | Codex |
 | Doyun (도윤) | Backend (`developer`) | `intelli-core` (auth, IAM, audit) | Codex |
 | Jun (준) | Backend (`developer`) | `intellicore-mate-backend` | Codex |

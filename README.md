@@ -141,8 +141,8 @@ with real values; quote paths containing spaces. `<repo>` is the target reposito
 
 Layout: `$AGENT_WS_ROOT/<agent>/<repo-name>/`, a normal clone per agent and repo.
 `AGENT_WS_ROOT` defaults to `<parent of the team folder>/agents`, beside `team`.
-Use lowercase names: hangyeol, seojin, doyun, jun, jiho, taeo, haeun, ria, seoyeon.
-Hangyeol also has a workspace for merge candidates and test runs.
+Use lowercase names: eunho, seojin, doyun, jun, jiho, taeo, haeun, ria, seoyeon.
+Eunho also has a workspace for merge candidates and test runs.
 Dependencies and build caches stay in place between jobs. Never run concurrent
 jobs in the same workspace. The helper accepts a local clone or remote URL,
 fetches origin, and starts a new branch from `origin/main` (optional fourth argument
@@ -160,7 +160,7 @@ Ownership is defined in `TEAM.md`; the names below are the default team.
 
 | Name | Role | Work |
 |---|---|---|
-| Hangyeol | PL | Assign, verify, commit, merge, release; main Claude Code session |
+| Eunho | PL | Assign, verify, commit, merge, release; main Claude Code session |
 | Seojin | `developer` | Frontend and UI tests |
 | Doyun | `developer` | Backend and server tests |
 | Jun | `developer` | Separate backend areas; write migrations |

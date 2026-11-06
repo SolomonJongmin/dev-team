@@ -4,7 +4,7 @@ set -euo pipefail
 [[ $# -ge 3 && $# -le 4 ]] || { echo "usage: agent-ws.sh <agent> <repo> <branch> [base=main]" >&2; exit 2; }
 agent=$1; repo=$2; branch=$3; base=${4:-main}
 case "$agent" in
-  hangyeol|seojin|doyun|jun|harin|minjae|yuna|siwoo|daon|geonu|jiho|taeo|haeun|ria|seoyeon) ;;
+  eunho|seojin|doyun|jun|harin|minjae|yuna|siwoo|daon|geonu|jiho|taeo|haeun|ria|seoyeon) ;;
   *) echo "Unknown agent: $agent (use a lowercase name from TEAM.md)." >&2; exit 2 ;;
 esac
 team=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)

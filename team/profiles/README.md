@@ -4,7 +4,7 @@
 
 | id | 이름 | 역할 |
 |---|---|---|
-| hangyeol | 한결 | PL |
+| eunho | 은호 | PL |
 | seojin | 서진 | developer |
 | doyun | 도윤 | developer |
 | jun | 준 | developer |
@@ -28,7 +28,7 @@
 ## 읽기와 권한
 
 run-codex.sh와 run-review.sh는 한국어 이름 또는 대소문자 구분 없는 영문 id를 해석한다. 예: 도윤/doyun, Ria/리아. 알 수 없는 이름은 exit 2로 중단한다.
-RULES 다음 개인 soul·workstyle·memory를 읽고 역할 파일을 읽는다. 개인 프로필은 brief·RULES·역할 권한을 대체하지 않는다. 한결의 PL 세션은 CLAUDE.md와 함께 자신의 세 파일을 읽는다.
+RULES 다음 개인 soul·workstyle·memory를 읽고 역할 파일을 읽는다. 개인 프로필은 brief·RULES·역할 권한을 대체하지 않는다. 은호의 PL 세션은 CLAUDE.md와 함께 자신의 세 파일을 읽는다.
 실행 없는 확인: `bash team/bin/run-codex.sh --resolve-only 도윤`, `bash team/bin/run-review.sh --resolve-only Ria`.
 전체 별칭·거부 경로와 STATUS 미변경 확인: `bash team/bin/test-profiles.sh` (Codex·Claude를 시작하지 않는다).
 
@@ -42,4 +42,4 @@ worker는 명시적으로 배정받은 프로필 편집 외에는 제안만 한�
 
 이 checkout의 team/STATUS.md는 빈 표이고 team/reports에는 기존 보고서가 없다. 초기 자료는 실제 운영 폴더 `C:/Users/최종민/projects/dev-team/team/STATUS.md`와 그 reports에서 읽었으며 링크는 이 위치를 가리킨다. 외부 원본을 이 브랜치로 복사하거나 STATUS를 수정하지 않았다. 다른 환경에서는 PL이 원본을 제공하거나 검증된 저장소 링크로 교체해야 한다.
 회차는 같은 사람·slug의 running 행 수이며, 시작이 없으면 미상이다. 덮어쓴 보고서로 과거 결과를 복원하지 않는다. done은 launcher 실행 종료이며 기능 통과나 리뷰 승인 증거가 아니다. 리뷰의 2차·3차 slug는 STATUS 그대로 별도 행이다.
-준의 single-session 구현 4회와 리아 리뷰 3회는 회고 보고서에서 확인된다. 도윤의 선행 2회 시도는 별도 개인 이력이다. 한결·지호·하은의 개인 작업 행은 없어 빈 이력으로 남겼다. 진행 중인 작업은 완료로 기록하지 않았다.
+준의 single-session 구현 4회와 리아 리뷰 3회는 회고 보고서에서 확인된다. 도윤의 선행 2회 시도는 별도 개인 이력이다. 은호·지호·하은의 개인 작업 행은 없어 빈 이력으로 남겼다. 진행 중인 작업은 완료로 기록하지 않았다.
