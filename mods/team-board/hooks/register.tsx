@@ -7,7 +7,7 @@ const normalize = (path: string) => path.replace(/\\/g, '/').replace(/\/+$/, '')
 const HALF = 999 // dock clamps to its 45% ceiling: about half the screen
 const SETUP = 'dev-team 경로를 설정하세요 (/plugin → team-board → teamDir)'
 const board = atom({ plugin: 'team-board', key: 'snapshot' } as const,
-  snapshot(undefined, undefined, 0), { shape: 'board-3' })
+  snapshot(undefined, undefined, 0), { shape: 'board-5' })
 
 export const register: Register = (on, options) => {
   let busy = false
@@ -77,12 +77,12 @@ export const register: Register = (on, options) => {
     if (value.pathMissing) return <Box><Text>{SETUP}</Text></Box>
     const decisions = [
       ...value.decisions.map(d => `${d.date} · ${d.slug}\n${d.question}\n${d.options}`),
-      ...blockedJobs(value).map(j => `${j.worker} · ${j.job} · blocked — 보고서 확인\n${j.report}`),
+      ...blockedJobs(value).map(j => `${j.worker} · ${j.job} · ${j.state} — 보고서 확인\n${j.report}`),
     ]
     const done = value.jobs.filter(j => j.state === 'done').slice(-5).reverse()
     return <Box flexDirection="column">
       <Text bold>팀원</Text>
-      {(value.members.length ? value.members : ['없음']).map(line => <Text>{line}</Text>)}
+      {value.members.length ? value.members.map(row => <Text><Text>{row.prefix}</Text><Text color={row.color} dimColor={row.dimColor}>{row.badge}</Text><Text>{row.detail}</Text></Text>) : <Text>없음</Text>}
       {value.warnings.map(w => <Text>{w}</Text>)}
       <Text bold>진행 중</Text>
       {(value.running.length ? value.running : ['없음']).map(line => <Text>{line}</Text>)}
