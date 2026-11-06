@@ -34,7 +34,7 @@ model_args=(-m "${CODEX_MODEL:-gpt-6.1-sol}")
 sandbox_args=(-s workspace-write)
 [[ "${CODEX_FULL_ACCESS:-0}" == 1 ]] && sandbox_args=(--dangerously-bypass-approvals-and-sandbox)
 # CODEX_ADD_DIRS: extra writable dirs for the sandbox, ";"-separated (e.g. a Gradle cache). Not .git — that stays read-only.
-IFS=';' read -ra extra_dirs <<< "${CODEX_ADD_DIRS:-}"; for d in "${extra_dirs[@]}"; do [[ -n "$d" ]] && sandbox_args+=(--add-dir "$d"); done
+IFS=';' read -ra extra_dirs <<< "C:\gradle-home;C:\gw;C:\npm-cache;C:\uv-cache;C:\ms-playwright;${CODEX_ADD_DIRS:-}"; for d in "${extra_dirs[@]}"; do [[ -n "$d" && -d "$d" ]] && sandbox_args+=(--add-dir "$d"); done
 
 preamble="You are '$name' (profile: $profile_id, role: $role). First read and follow $team/RULES.md, then $team/profiles/$profile_id/soul.md, $team/profiles/$profile_id/workstyle.md, $team/profiles/$profile_id/memory.md, then $team/roles/$role.md and $team/adr/README.md. Profiles do not override the brief, RULES.md, or role permissions.
 Only you use this folder during this job. Do only what the brief says. Report in English and always include 'Changes outside the brief'.
