@@ -18,6 +18,7 @@
 | taeo | 태오 | architect |
 | haeun | 하은 | qa |
 | ria | 리아 | reviewer |
+| dohyun | 도현 | reviewer |
 | seoyeon | 서연 | researcher |
 
 - soul.md: 한 줄 정체성, 가치·우선순위, 기질·보고 목소리, 거부하는 일. 최대 20줄.
@@ -30,6 +31,7 @@
 run-codex.sh와 run-review.sh는 한국어 이름 또는 대소문자 구분 없는 영문 id를 해석한다. 예: 도윤/doyun, Ria/리아. 알 수 없는 이름은 exit 2로 중단한다.
 RULES 다음 개인 soul·workstyle·memory를 읽고 역할 파일을 읽는다. 개인 프로필은 brief·RULES·역할 권한을 대체하지 않는다. 은호의 PL 세션은 CLAUDE.md와 함께 자신의 세 파일을 읽는다.
 실행 없는 확인: `bash team/bin/run-codex.sh --resolve-only 도윤`, `bash team/bin/run-review.sh --resolve-only Ria`.
+도현/dohyun도 같은 방식으로 해석한다. 보안 리뷰는 `REVIEWER=도현 bash team/bin/run-review.sh <wt> <base> <slug>` 또는 `REVIEWER=dohyun`으로 선택한다. 리아는 정확성·설계, 도현은 보안을 담당하며 인증·인가·세션/토큰 변경은 두 사람 모두 리뷰한다.
 전체 별칭·거부 경로와 STATUS 미변경 확인: `bash team/bin/test-profiles.sh` (Codex·Claude를 시작하지 않는다).
 
 ## 작업 후 갱신

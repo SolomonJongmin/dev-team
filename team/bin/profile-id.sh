@@ -16,6 +16,7 @@ resolve_profile_id() {
     태오|taeo) printf '%s\n' taeo ;;
     하은|haeun) printf '%s\n' haeun ;;
     리아|ria) printf '%s\n' ria ;;
+    도현|dohyun) printf '%s\n' dohyun ;;
     서연|seoyeon) printf '%s\n' seoyeon ;;
     *) echo "unknown member name: $1 (see team/profiles/README.md)" >&2; return 2 ;;
   esac
