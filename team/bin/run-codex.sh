@@ -40,9 +40,15 @@ Only you use this folder during this job. Do only what the brief says. Report in
 Before submission, do the RULES.md section 1 self-check (races, bypasses, permissions, failures). Report tests only as commands actually run and counts. Edit files only with the editing tool (apply_patch).
 End each report with a 'Memory proposal:' line containing 0–2 evidence-backed lessons for the PL to append (use 'None' for 0). Do not update profiles yourself unless the brief asks."
 
-preamble="$preamble
+case "$role" in
+  researcher|architect|reviewer|qa)
+    sandbox_args=(-s read-only)
+    preamble="$preamble
+This is a read-only review: you cannot write files. Return the full report as your final message; the launcher saves it as the report. Tests/builds are run by the PL; mark them 'Not run (read-only review)'. Do not run preflight commands that write files. Use BLOCKED: <reason> as the first report line only when a review diff is empty or required files cannot be read." ;;
+  *) preamble="$preamble
 Write the full report to $report; if sandbox permissions prevent this, return the full report as your final response for the launcher to save. Run the brief's optional Preflight commands/host checks first; on any failure write BLOCKED: <reason> as the first report line and stop. No workarounds outside the workspace or Windows temp writes. TMP/TEMP/TMPDIR are inside the workspace. Network is blocked in workspace-write; CODEX_FULL_ACCESS=1 requires user approval per job."
-case "$role" in researcher|architect|reviewer|qa) sandbox_args=(-s read-only) ;; esac
+    ;;
+esac
 # The workspace-write sandbox keeps .git read-only (also with --add-dir), so a sandboxed worker cannot commit.
 # It leaves the changes in the workspace and the PL commits them after review.
 [[ "${CODEX_FULL_ACCESS:-0}" != 1 ]] && preamble="$preamble

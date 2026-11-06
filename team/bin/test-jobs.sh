@@ -48,8 +48,10 @@ export FAKE_MODE=fallback
 for role in researcher architect reviewer qa; do
   ROLE=$role run
   check test "$rc" = 2
-  ROLE=$role BRIEF="$fixture/read.md" run
+  FAKE_READ_ONLY=1 ROLE=$role BRIEF="$fixture/read.md" run
   check test "$rc" = 0
+  check grep -qx 'fallback report' "$report"
+  check cmp "$report.final.txt" "$report"
 done
 ROLE=../roles/researcher run
 check test "$rc" = 2
@@ -69,7 +71,10 @@ check test "$rc" = 19
 rc=0; bash "$fixture/team/bin/wait-job.sh" review-audit || rc=$?
 check test "$rc" = 1
 export FAKE_EXIT=0 FAKE_MODE=fallback
-check bash "$fixture/team/bin/run-review.sh" "$fixture/work" HEAD audit
+check env FAKE_READ_ONLY=1 bash "$fixture/team/bin/run-review.sh" "$fixture/work" HEAD audit
+review_report=$(tail -n 1 "$fixture/team/STATUS.md" | cut -d '|' -f 6 | xargs)
+check grep -qx 'fallback report' "$review_report"
+check cmp "$review_report.final.txt" "$review_report"
 check bash "$fixture/team/bin/wait-job.sh" review-audit
 export FAKE_EXIT=19
 rc=0; bash "$fixture/team/bin/run-claude.sh" doyun developer "$fixture/work" "$fixture/brief.md" > "$fixture/claude" || rc=$?
@@ -83,6 +88,11 @@ done
 export REVIEW_ENGINE=claude FAKE_EXIT=23
 rc=0; bash "$fixture/team/bin/run-review.sh" "$fixture/work" HEAD audit > "$fixture/review" || rc=$?
 check test "$rc" = 23
+export FAKE_EXIT=0
+check bash "$fixture/team/bin/run-review.sh" "$fixture/work" HEAD audit
+review_report=$(tail -n 1 "$fixture/team/STATUS.md" | cut -d '|' -f 6 | xargs)
+check grep -qx 'claude report' "$review_report"
+check cmp "$review_report.final.txt" "$review_report"
 printf '| date | name | overlap | running | old |\n| date | name | overlap | running | new |\n| date | name | overlap | blocked | new |\n| date | name | overlap | done | old |\n' >> "$fixture/team/STATUS.md"
 rc=0; bash "$fixture/team/bin/wait-job.sh" overlap || rc=$?
 check test "$rc" = 1

@@ -47,6 +47,7 @@ Use the role's report format if it defines one.
 
 ---
 ## Change log
+- 2026-11-06: Read-only reviews/jobs no longer block on report path or test execution; launcher saves the final message.
 - 2026-11-06: PL renamed 한결 → 은호 (Eunho, id eunho) to avoid colliding with the DESK assistant 한결.
 - 2026-11-06: Repository owners assigned; added 하린, 민재, 유나, 시우, 다온, 건우 (personas adapted from agency-agents, MIT).
 - 2026-11-03: Per-person profiles preserve identity, workstyle, and evidence-backed memory/history; workers propose lessons and the PL reviews and commits updates.

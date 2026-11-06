@@ -33,8 +33,13 @@ Review the diff ($base...HEAD) received on stdin. Do not edit code or commit. Re
 $extra
 End each report with a 'Memory proposal:' line containing 0–2 evidence-backed lessons for the PL to append (use 'None' for 0). Do not edit profiles during review."
 
-prompt="$prompt
+if [[ "$engine" == codex ]]; then
+  prompt="$prompt
+This is a read-only review: you cannot write files. Return the full report as your final message; the launcher saves it as the report. Tests/builds are run by the PL; mark them 'Not run (read-only review)'. Do not run preflight commands that write files. Use BLOCKED: <reason> as the first report line only when the diff is empty or required files cannot be read."
+else
+  prompt="$prompt
 Write the full report to $report; final output is the fallback. On preflight failure use BLOCKED: <reason> as the first report line."
+fi
 rc=0
 case $engine in
   claude)
