@@ -10,6 +10,10 @@ cp -R "$root/team/profiles" "$root/team/roles" "$fixture/team/"
 cp "$root/team/bin/test-fixtures/"* "$fixture/fakes/"
 chmod +x "$fixture/fakes/"*
 export PATH="$fixture/fakes:$PATH"
+# Capture the actual engine arguments while retaining the existing fake engine.
+export CODEX_TEST_CAPTURE="$fixture/codex-args"
+codex() { printf '%s\n' "$@" > "$CODEX_TEST_CAPTURE"; command codex "$@"; }
+export -f codex
 printf '## Goal\nEdit tooling\n' > "$fixture/brief.md"
 printf 'Mode: read-only\n' > "$fixture/read.md"
 printf '| old | person | historical | done | old-report |\n' > "$fixture/team/STATUS.md"
@@ -25,7 +29,19 @@ run() {
 run
 check test "$rc" = 0
 check grep -qx 'fallback report' "$report"
+check grep -qx 'sandbox_workspace_write.network_access=true' "$CODEX_TEST_CAPTURE"
+check grep -qx 'Network is available in workspace-write to install packages and fetch references.' "$CODEX_TEST_CAPTURE"
+check grep -q 'Never execute downloaded scripts.*official registries already used by the repo.*Do not change lockfiles unless the brief allows it.' "$CODEX_TEST_CAPTURE"
 first=$report
+CODEX_NETWORK=0 run
+check test "$rc" = 0
+check grep -qx 'sandbox_workspace_write.network_access=false' "$CODEX_TEST_CAPTURE"
+check grep -qx 'Network is disabled in workspace-write (CODEX_NETWORK=0).' "$CODEX_TEST_CAPTURE"
+check bash -c '! grep -q "sandbox_workspace_write.network_access=true" "$CODEX_TEST_CAPTURE"'
+CODEX_FULL_ACCESS=1 run
+check test "$rc" = 0
+check grep -qx -- '--dangerously-bypass-approvals-and-sandbox' "$CODEX_TEST_CAPTURE"
+check bash -c '! grep -q "sandbox_workspace_write.network_access=" "$CODEX_TEST_CAPTURE"'
 export FAKE_MODE=full
 run
 check test "$report" != "$first"
@@ -52,6 +68,8 @@ for role in researcher architect reviewer qa; do
   check test "$rc" = 0
   check grep -qx 'fallback report' "$report"
   check cmp "$report.final.txt" "$report"
+  check grep -qx 'read-only' "$CODEX_TEST_CAPTURE"
+  check bash -c '! grep -q "sandbox_workspace_write.network_access=" "$CODEX_TEST_CAPTURE"'
 done
 ROLE=../roles/researcher run
 check test "$rc" = 2
@@ -72,6 +90,8 @@ rc=0; bash "$fixture/team/bin/wait-job.sh" review-audit || rc=$?
 check test "$rc" = 1
 export FAKE_EXIT=0 FAKE_MODE=fallback
 check env FAKE_READ_ONLY=1 bash "$fixture/team/bin/run-review.sh" "$fixture/work" HEAD audit
+check grep -qx 'read-only' "$CODEX_TEST_CAPTURE"
+check bash -c '! grep -q "sandbox_workspace_write.network_access=" "$CODEX_TEST_CAPTURE"'
 review_report=$(tail -n 1 "$fixture/team/STATUS.md" | cut -d '|' -f 6 | xargs)
 check grep -qx 'fallback report' "$review_report"
 check cmp "$review_report.final.txt" "$review_report"
