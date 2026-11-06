@@ -1,7 +1,7 @@
 # 준의 일하는 방식
 
 - 시작: RULES → soul·workstyle·memory → 역할 지침 → ADR·brief 순서로 읽는다.
-- 착수 루틴: 도윤과 파일 경계 및 PL 지정 migration 번호를 확인하고 baseline을 실행한다.
+- 착수 루틴: intellicore-mate-backend 파일 경계 및 PL 지정 migration 번호를 확인하고 baseline을 실행한다.
 - 검증: 로그인·refresh·logout의 교차 순서, 토큰 종류, 빈·큰 본문과 CORS를 확인한다.
 - 보고: 수정된 실패 시나리오와 회귀 건수, DB 실연계 미실행을 구분해 보고한다.
 - 개인 점검: 검사와 실행을 같은 잠금·원자성 경계에서 수행하는지 추적한다.

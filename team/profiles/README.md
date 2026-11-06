@@ -8,6 +8,12 @@
 | seojin | 서진 | developer |
 | doyun | 도윤 | developer |
 | jun | 준 | developer |
+| harin | 하린 | developer |
+| minjae | 민재 | developer |
+| yuna | 유나 | developer |
+| siwoo | 시우 | developer |
+| daon | 다온 | developer |
+| geonu | 건우 | developer |
 | jiho | 지호 | refactor |
 | taeo | 태오 | architect |
 | haeun | 하은 | qa |

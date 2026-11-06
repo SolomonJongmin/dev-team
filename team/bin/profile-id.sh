@@ -6,6 +6,12 @@ resolve_profile_id() {
     서진|seojin) printf '%s\n' seojin ;;
     도윤|doyun) printf '%s\n' doyun ;;
     준|jun) printf '%s\n' jun ;;
+    하린|harin) printf '%s\n' harin ;;
+    민재|minjae) printf '%s\n' minjae ;;
+    유나|yuna) printf '%s\n' yuna ;;
+    시우|siwoo) printf '%s\n' siwoo ;;
+    다온|daon) printf '%s\n' daon ;;
+    건우|geonu) printf '%s\n' geonu ;;
     지호|jiho) printf '%s\n' jiho ;;
     태오|taeo) printf '%s\n' taeo ;;
     하은|haeun) printf '%s\n' haeun ;;

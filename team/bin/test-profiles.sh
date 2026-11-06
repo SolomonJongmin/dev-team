@@ -18,7 +18,10 @@ for script in team/bin/run-codex.sh team/bin/run-review.sh; do
   for pair in '도윤:doyun' 'doyun:doyun' 'Ria:ria' '리아:ria' 'DOYUN:doyun' \
     'Hangyeol:hangyeol' '한결:hangyeol' 'Seojin:seojin' '서진:seojin' \
     'Jun:jun' '준:jun' 'Jiho:jiho' '지호:jiho' 'Taeo:taeo' '태오:taeo' \
-    'Haeun:haeun' '하은:haeun' 'Seoyeon:seoyeon' '서연:seoyeon'; do
+    'Haeun:haeun' '하은:haeun' 'Seoyeon:seoyeon' '서연:seoyeon' \
+    'Harin:harin' 'harin:harin' '하린:harin' 'Minjae:minjae' 'minjae:minjae' '민재:minjae' \
+    'Yuna:yuna' 'yuna:yuna' '유나:yuna' 'Siwoo:siwoo' 'siwoo:siwoo' '시우:siwoo' \
+    'Daon:daon' 'daon:daon' '다온:daon' 'Geonu:geonu' 'geonu:geonu' '건우:geonu'; do
     name=${pair%:*}; expected=${pair#*:}
     output=$(bash "$script" --resolve-only "$name"); code=$?
     if [[ $code == 0 && "$output" == "$expected" ]]; then

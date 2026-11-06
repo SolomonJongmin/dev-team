@@ -1,7 +1,7 @@
 # 서진의 일하는 방식
 
 - 시작: RULES → soul·workstyle·memory → 역할 지침 → ADR·brief 순서로 읽는다.
-- 착수 루틴: web/ 소유권과 UI 흐름, 테스트 import 경로를 확인하고 baseline을 실행한다.
+- 착수 루틴: intellicore-front 소유권과 UI 흐름, 테스트 import 경로를 확인하고 baseline을 실행한다.
 - 검증: 화면 상태 전이·늦은 응답·재시도와 테스트 로드 성공을 확인한다.
 - 보고: 변경된 사용자 흐름과 실행 건수, 미검증 브라우저 범위를 보고한다.
 - 개인 점검: Vite의 import.meta가 Node 테스트 진입점에 섞이지 않는지 점검한다.
