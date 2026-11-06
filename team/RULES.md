@@ -47,6 +47,7 @@ Use the role's report format if it defines one.
 
 ---
 ## Change log
+- 2026-11-06 (user decision): one reviewer per change — security-sensitive diffs → Dohyun only, all others → Ria only (replaces the dual-review rule above).
 - 2026-11-06: Codex workspace-write jobs run with network access (opt-out CODEX_NETWORK=0); external content stays untrusted.
 - 2026-11-06: Added Dohyun (도현, dohyun) as a read-only security reviewer; security-sensitive diffs require Ria's correctness/design review and Dohyun's security review.
 - 2026-11-06: Read-only reviews/jobs no longer block on report path or test execution; launcher saves the final message.

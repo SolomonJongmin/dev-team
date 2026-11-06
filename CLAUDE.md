@@ -20,13 +20,21 @@ The PL does not write product code; return implementation and diagnostic fixes t
 5. Never assign two workers to the same folder or file at once. Only one worker may use the browser at a time.
 6. Never delete or revert `team/STATUS.md` (work history). For trial runs, delete only the reports.
 
+## Scrum feedback rules (2026-11-06)
+- Launch every worker with their TEAM.md role; read-only jobs use the `Mode: read-only` line, not a different role.
+- Before launch, run the baseline once yourself and fill "Environment checked by the PL" in the brief.
+- When a job ends: first give that worker (and every idle worker) the next job, then close the PL-side verification (Docker tests, browser) for the finished job immediately. "Implemented" is not "done" until verification closes.
+- Re-reviews always get the previous report path and a real base commit.
+- Never edit team/bin/*.sh in the live folder while jobs run.
+- Haeun gets a QA job after every dev deployment; Jiho gets a refactor job when a merged area has a clear target structure (from Taeo or a review).
+
 ## Before merging
 After reviewing each job, append accepted `Memory proposal:` lessons to that person's `team/profiles/<id>/memory.md` (newest first, dated, with slug and report evidence) and add a dated result/rounds/report row to `history.md`. Workers propose; the PL reviews and commits. Keep memory at 40 entries by summarizing older lessons; see [profile maintenance](team/profiles/README.md).
 
 1. Is the diff within the brief's scope? Have workers revert out-of-scope changes. Check for corrupted characters (`??`, etc.).
 2. Does the report show passing type checks and 0 new failures beyond the baseline **with actual counts**? The PL runs new tests once to verify they execute.
    Reject submissions with 0 tests run or tests that fail to load. Keep DB/integration checks that did not run explicitly unverified. Briefs use `--no-daemon` where applicable and never stop shared daemons.
-3. For security, permissions, settings persistence, or process lifecycles, run `team/bin/run-review.sh <wt> <base> <slug>` (Ria, Codex by default) for correctness/design. Security-sensitive diffs, including authentication, permission, and session/token changes, require both Ria and Dohyun: also run `REVIEWER=도현 bash team/bin/run-review.sh <wt> <base> <slug>-security`. Both use the read-only reviewer role. Workers fix P0–P2 findings, then re-review (check previous findings first) before merging.
+3. For security, permissions, settings persistence, or process lifecycles, run **one** review (user decision 2026-11-06: one reviewer per change, never both). Security-sensitive diffs (authentication, permission, session/token) go to Dohyun only: `REVIEWER=도현 bash team/bin/run-review.sh <wt> <base> <slug>`. Everything else goes to Ria only: `team/bin/run-review.sh <wt> <base> <slug>`. Read-only reviewer role. Workers fix P0–P2 findings, then re-review (check previous findings first) before merging.
 4. Check that commits contain no secrets or build outputs.
 5. Run the full test suite once on the result merged into the latest main, then push (check parallel merge conflicts and migration numbers).
 

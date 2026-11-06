@@ -10,6 +10,25 @@ Add an on/off "알림" toggle to the settings screen.
 - Replace illustrative facts above with file:line or URL evidence for external/JAR/API contracts and supported policy values; mark unchecked facts Not checked.
 - Record auth/cache policy, permitted token paths and PL-assigned migration number where relevant.
 
+## Environment checked by the PL (required, before launch)
+- PL ran the baseline command once in this workspace (or a sibling with the same deps) and it started: caches writable, browsers present (Playwright revision), venv/node_modules present. Write the result here. If deps are already installed, do not ask the worker to install again.
+- One final instruction per topic (no "run npm ci" in one place and "do not reinstall" in another).
+
+## Contracts available (required for UI/integration work)
+- For every screen or call the worker must build: the API path/field and whether it **already exists** (file:line) or is being built in parallel (owner, fixed field names). Never ask for UI that needs an API nobody is building.
+
+## Auth boundaries (required for auth/token/permission work)
+- Token rotation before/after, lock waits, caller trust boundary, which identity each call uses. Decide these in the brief, not in review rounds.
+
+## Verification owner (required)
+- What the worker verifies, what the PL verifies (Docker/Testcontainers, browser, deployment) and when. The PL closes its part right after the job ends, before the next round.
+
+## Re-review (when this is a review fix)
+- Previous report path(s) and base commit; pass `PREV_REPORT=<path>` to run-review.sh.
+
+## Report language
+- Korean (code, commands and paths as-is).
+
 ## Baseline (required)
 - Exact commands and current pass/fail counts: `<command>: <passed>, <failed>` (replace before launch).
 
