@@ -21,7 +21,8 @@ for script in team/bin/run-codex.sh team/bin/run-review.sh; do
     'Haeun:haeun' '하은:haeun' 'Seoyeon:seoyeon' '서연:seoyeon' \
     'Harin:harin' 'harin:harin' '하린:harin' 'Minjae:minjae' 'minjae:minjae' '민재:minjae' \
     'Yuna:yuna' 'yuna:yuna' '유나:yuna' 'Siwoo:siwoo' 'siwoo:siwoo' '시우:siwoo' \
-    'Daon:daon' 'daon:daon' '다온:daon' 'Geonu:geonu' 'geonu:geonu' '건우:geonu'; do
+    'Daon:daon' 'daon:daon' '다온:daon' 'Geonu:geonu' 'geonu:geonu' '건우:geonu' \
+    '도현:dohyun' 'dohyun:dohyun' 'DOHYUN:dohyun'; do
     name=${pair%:*}; expected=${pair#*:}
     output=$(bash "$script" --resolve-only "$name"); code=$?
     if [[ $code == 0 && "$output" == "$expected" ]]; then

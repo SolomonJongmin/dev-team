@@ -26,7 +26,7 @@ After reviewing each job, append accepted `Memory proposal:` lessons to that per
 1. Is the diff within the brief's scope? Have workers revert out-of-scope changes. Check for corrupted characters (`??`, etc.).
 2. Does the report show passing type checks and 0 new failures beyond the baseline **with actual counts**? The PL runs new tests once to verify they execute.
    Reject submissions with 0 tests run or tests that fail to load. Keep DB/integration checks that did not run explicitly unverified. Briefs use `--no-daemon` where applicable and never stop shared daemons.
-3. For security, permissions, settings persistence, or process lifecycles, run `team/bin/run-review.sh <wt> <base> <slug>` (Ria, Codex by default). Workers fix P0–P2 findings, then re-review (check previous findings first) before merging.
+3. For security, permissions, settings persistence, or process lifecycles, run `team/bin/run-review.sh <wt> <base> <slug>` (Ria, Codex by default) for correctness/design. Security-sensitive diffs, including authentication, permission, and session/token changes, require both Ria and Dohyun: also run `REVIEWER=도현 bash team/bin/run-review.sh <wt> <base> <slug>-security`. Both use the read-only reviewer role. Workers fix P0–P2 findings, then re-review (check previous findings first) before merging.
 4. Check that commits contain no secrets or build outputs.
 5. Run the full test suite once on the result merged into the latest main, then push (check parallel merge conflicts and migration numbers).
 

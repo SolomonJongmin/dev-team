@@ -20,4 +20,7 @@ Engine: all workers and reviewers use **Codex** (default `gpt-6.1-sol`, override
 | Taeo (태오) | Architect (`architect`) | Assess structure and define target structure (read-only, only when needed) | Codex |
 | Haeun (하은) | QA (`qa`) | E2E checks right after deployment (no state changes) | Codex + browser MCP |
 | Ria (리아) | Cross-reviewer (`reviewer`) | Review diffs before merge (read-only) | Codex (`run-review.sh`, read-only) |
+| Dohyun (도현) | Security reviewer (`reviewer`) | 보안 리뷰: 인증·인가·세션/토큰·개인정보 노출·비밀값·입력 검증 (read-only) | Codex (`REVIEWER=도현 run-review.sh`, read-only) |
 | Seoyeon (서연) | Researcher (`researcher`) | Market and technical research; sources + dates required | Codex (web search) |
+
+Ria reviews correctness and design; Dohyun reviews security. Authentication, permission, and session/token changes require both reviews before merge.
